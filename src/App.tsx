@@ -22,7 +22,11 @@ import {
   ShieldCheck,
   KeyRound,
   LogOut,
-  X
+  X,
+  LogIn,
+  UserCheck,
+  UserPlus,
+  RefreshCw
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { 
@@ -391,14 +395,37 @@ export default function App() {
     return `${cleanClass}__${cleanName}`;
   };
 
+  // Student Login validation handler
+  const handleStudentLogin = async () => {
+    if (!isStep1Valid) return;
+    const docId = getStudentVoteDocId(kelas, namaSiswa);
+    const alreadyExistsInMemory = firestoreVotes.some(v => v.id === docId);
+    if (alreadyExistsInMemory) {
+      setDuplicateWarning(`Siswa atas nama "${namaSiswa}" di rombel "${kelas}" sudah pernah memberikan suara! Setiap siswa hanya dapat polling 1 kali.`);
+      return;
+    }
+    setDuplicateWarning(null);
+    setStep(2);
+  };
+
+  // Reset/switch to login as another student
+  const handleLoginAsNewStudent = () => {
+    localStorage.removeItem('smks_pgri1_hgn2026_voted');
+    setHasVotedToken(null);
+    setNamaSiswa('');
+    setKelas('');
+    setNamaGuru('');
+    setSkorGuru({ keramahan: 0, profesionalisme: 0, empati: 0, keteladanan: 0, inspirasi: 0 });
+    setNamaTU('');
+    setSkorTU({ keramahan: 0, kecepatan: 0, bantuan: 0, kedisiplinan: 0, auraPositif: 0 });
+    setSubmittedData(null);
+    setDuplicateWarning(null);
+    setStep(1);
+  };
+
   // Submit to Firebase Firestore
   const handleSubmit = async () => {
     if (!isStep3Valid) return;
-
-    if (hasVotedToken) {
-      alert('Anda sudah pernah menggunakan hak suara pada perangkat ini!');
-      return;
-    }
 
     const voteDocId = getStudentVoteDocId(kelas, namaSiswa);
 
@@ -410,7 +437,7 @@ export default function App() {
       const existingDoc = await getDoc(docRef);
 
       if (existingDoc.exists()) {
-        const msg = `Siswa dengan nama "${namaSiswa}" di kelas "${kelas}" sudah pernah tercatat di Firebase. Setiap siswa hanya diperbolehkan 1 kali polling!`;
+        const msg = `Siswa dengan nama "${namaSiswa}" di rombel "${kelas}" sudah pernah tercatat di Firebase. Setiap siswa hanya diperbolehkan 1 kali polling!`;
         setDuplicateWarning(msg);
         setIsSubmitting(false);
         return;
@@ -585,18 +612,23 @@ export default function App() {
             {/* Glassmorphic Container Card - HANYA FORMULIR POLLING */}
             <div className="bg-white/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-2xl border border-white/60 p-5 sm:p-8 relative overflow-hidden transition-all duration-300">
               
-              {/* Sudah Memilih Warning */}
-              {hasVotedToken && (
-                <div className="mb-5 p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs sm:text-sm">
-                  <div className="flex items-start gap-2.5">
-                    <Lock className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-                    <div>
-                      <h4 className="font-bold text-slate-900">Hak Suara Anda Sudah Tercatat</h4>
-                      <p className="text-slate-600 text-xs mt-0.5 leading-relaxed">
-                        Siswa atas nama <strong>{hasVotedToken.nama}</strong> ({hasVotedToken.kelas}) telah berpartisipasi dalam Hari Guru Nasional 2026. Setiap siswa hanya dapat melakukan polling <strong>1 kali</strong>.
-                      </p>
-                    </div>
+              {/* Info bila perangkat sebelumnya pernah dipakai memilih */}
+              {hasVotedToken && step === 1 && (
+                <div className="mb-4 p-3.5 rounded-2xl bg-indigo-50/80 border border-indigo-200 text-indigo-950 text-xs flex flex-wrap items-center justify-between gap-2.5">
+                  <div className="flex items-center gap-2">
+                    <UserCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>
+                      Siswa sebelumnya di perangkat ini: <strong>{hasVotedToken.nama}</strong> ({hasVotedToken.kelas})
+                    </span>
                   </div>
+                  <button
+                    type="button"
+                    onClick={handleLoginAsNewStudent}
+                    className="px-2.5 py-1 rounded-lg bg-indigo-600 text-white font-bold hover:bg-indigo-700 transition cursor-pointer text-[11px] flex items-center gap-1 shadow-xs"
+                  >
+                    <RefreshCw className="w-3 h-3" />
+                    <span>Bersihkan & Login Baru</span>
+                  </button>
                 </div>
               )}
 
@@ -612,7 +644,7 @@ export default function App() {
               )}
 
               {/* Wizard Steps Header (Langkah 1, 2, 3) */}
-              {step < 4 && !hasVotedToken && (
+              {step < 4 && (
                 <div className="mb-6">
                   <div className="flex items-center justify-between relative mb-2">
                     <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-slate-200 rounded-full z-0"></div>
@@ -636,7 +668,7 @@ export default function App() {
                       >
                         {step > 1 ? <Check className="w-4 h-4 stroke-[3]" /> : '1'}
                       </div>
-                      <span className="text-[11px] font-medium mt-1 text-slate-700">Data Diri</span>
+                      <span className="text-[11px] font-bold mt-1 text-slate-800">Login Siswa</span>
                     </div>
 
                     <div className="relative z-10 flex flex-col items-center">
@@ -670,16 +702,21 @@ export default function App() {
                 </div>
               )}
 
-              {/* STEP 1: Data Diri */}
-              {step === 1 && !hasVotedToken && (
+              {/* STEP 1: Login Siswa */}
+              {step === 1 && (
                 <div className="animate-fade-in space-y-4">
                   <div className="border-b border-slate-100 pb-3">
-                    <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                      <User className="w-5 h-5 text-indigo-600" />
-                      <span>Langkah 1: Identitas Siswa</span>
-                    </h2>
-                    <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-                      Penting: Setiap siswa hanya dapat melakukan polling <strong>1 kali</strong>.
+                    <div className="flex items-center justify-between">
+                      <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <LogIn className="w-5 h-5 text-indigo-600" />
+                        <span>Portal Login Siswa</span>
+                      </h2>
+                      <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                        Langkah 1/3
+                      </span>
+                    </div>
+                    <p className="text-xs sm:text-sm text-slate-500 mt-1">
+                      Masukkan <strong>Nama Lengkap</strong> dan pilih <strong>Rombel Kelas</strong> Anda untuk masuk ke sistem Polling HGN 2026.
                     </p>
                   </div>
 
@@ -706,7 +743,7 @@ export default function App() {
 
                   <div>
                     <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1">
-                      Kelas & Jurusan <span className="text-pink-500">*</span>
+                      Kelas & Program Keahlian <span className="text-pink-500">*</span>
                     </label>
                     <div className="relative">
                       <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
@@ -758,22 +795,15 @@ export default function App() {
                     <button
                       type="button"
                       disabled={!isStep1Valid}
-                      onClick={async () => {
-                        const docId = getStudentVoteDocId(kelas, namaSiswa);
-                        const alreadyExistsInMemory = firestoreVotes.some(v => v.id === docId);
-                        if (alreadyExistsInMemory) {
-                          setDuplicateWarning(`Siswa atas nama "${namaSiswa}" di kelas "${kelas}" sudah pernah tercatat di Firebase!`);
-                          return;
-                        }
-                        setStep(2);
-                      }}
+                      onClick={handleStudentLogin}
                       className={`w-full py-3 rounded-xl font-bold text-sm text-white transition duration-200 shadow-md flex items-center justify-center gap-2 cursor-pointer ${
                         isStep1Valid
                           ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:opacity-95 shadow-purple-500/25'
                           : 'bg-slate-300 cursor-not-allowed'
                       }`}
                     >
-                      <span>Lanjut ke Guru Favorit</span>
+                      <LogIn className="w-4 h-4" />
+                      <span>Masuk / Login Siswa & Mulai Polling</span>
                       <ArrowRight className="w-4 h-4" />
                     </button>
                   </div>
@@ -781,8 +811,24 @@ export default function App() {
               )}
 
               {/* STEP 2: Guru Favorit */}
-              {step === 2 && !hasVotedToken && (
+              {step === 2 && (
                 <div className="animate-fade-in space-y-4">
+                  {/* Info Siswa yang Login */}
+                  <div className="flex items-center justify-between bg-slate-100/90 px-3.5 py-2 rounded-xl text-xs border border-slate-200">
+                    <div className="flex items-center gap-2 text-slate-800">
+                      <UserCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <span>Login: <strong className="text-slate-900">{namaSiswa}</strong> ({kelas})</span>
+                    </div>
+                    <button 
+                      type="button"
+                      onClick={() => setStep(1)} 
+                      className="text-purple-600 hover:text-purple-800 font-bold text-[11px] flex items-center gap-1 cursor-pointer"
+                    >
+                      <RefreshCw className="w-3 h-3" />
+                      <span>Ganti Siswa</span>
+                    </button>
+                  </div>
+
                   <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
                     <div>
                       <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
@@ -889,8 +935,24 @@ export default function App() {
               )}
 
               {/* STEP 3: Staf TU Favorit */}
-              {step === 3 && !hasVotedToken && (
+              {step === 3 && (
                 <div className="animate-fade-in space-y-4">
+                  {/* Info Siswa yang Login */}
+                  <div className="flex items-center justify-between bg-slate-100/90 px-3.5 py-2 rounded-xl text-xs border border-slate-200">
+                    <div className="flex items-center gap-2 text-slate-800">
+                      <UserCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <span>Login: <strong className="text-slate-900">{namaSiswa}</strong> ({kelas})</span>
+                    </div>
+                    <button 
+                      type="button"
+                      onClick={() => setStep(1)} 
+                      className="text-purple-600 hover:text-purple-800 font-bold text-[11px] flex items-center gap-1 cursor-pointer"
+                    >
+                      <RefreshCw className="w-3 h-3" />
+                      <span>Ganti Siswa</span>
+                    </button>
+                  </div>
+
                   <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
                     <div>
                       <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
@@ -1042,6 +1104,21 @@ export default function App() {
                       <span className="text-slate-500">Staf TU Favorit:</span>
                       <span className="font-bold text-pink-700">{submittedData.namaTU}</span>
                     </div>
+                  </div>
+
+                  {/* Tombol Login Siswa Baru */}
+                  <div className="pt-2 max-w-md mx-auto space-y-2">
+                    <button
+                      type="button"
+                      onClick={handleLoginAsNewStudent}
+                      className="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:opacity-95 text-white font-bold text-sm shadow-md shadow-purple-500/20 transition flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <UserPlus className="w-4 h-4" />
+                      <span>Login Siswa Lainnya (Isi Polling Baru)</span>
+                    </button>
+                    <p className="text-[11px] text-slate-400">
+                      Klik tombol di atas bila komputer atau ponsel ini akan digunakan oleh siswa lain.
+                    </p>
                   </div>
                 </div>
               )}

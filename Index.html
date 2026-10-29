@@ -237,16 +237,21 @@
           </div>
         </section>
 
-        <!-- LANGKAH 1: DATA DIRI -->
+        <!-- LANGKAH 1: LOGIN SISWA -->
         <section id="step1" class="step-content step-enter">
-          <div class="mb-5 border-b border-slate-100 pb-3">
-            <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-              <i class="fa-solid fa-id-card text-indigo-600"></i>
-              Langkah 1: Identitas Siswa
-            </h2>
-            <p class="text-xs sm:text-sm text-slate-500 mt-0.5">
-              Penting: Setiap siswa hanya dapat melakukan polling <strong>1 kali</strong>.
-            </p>
+          <div class="mb-5 border-b border-slate-100 pb-3 flex items-center justify-between">
+            <div>
+              <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-right-to-bracket text-indigo-600"></i>
+                <span>Langkah 1: Login Siswa</span>
+              </h2>
+              <p class="text-xs sm:text-sm text-slate-500 mt-0.5">
+                Masukkan Nama Lengkap dan pilih Rombel untuk masuk ke formulir polling.
+              </p>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
+              Portal Siswa
+            </span>
           </div>
 
           <form id="formStep1" onsubmit="event.preventDefault();" class="space-y-4">
@@ -326,7 +331,8 @@
                 onclick="window.goToStep(2)"
                 class="w-full py-3 rounded-xl font-bold text-sm text-white bg-slate-300 cursor-not-allowed transition duration-200 shadow-md flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span>Lanjut ke Guru Favorit</span>
+                <i class="fa-solid fa-right-to-bracket"></i>
+                <span>Masuk / Login Siswa & Mulai Polling</span>
                 <i class="fa-solid fa-arrow-right"></i>
               </button>
             </div>
@@ -580,6 +586,21 @@
               <span class="text-slate-500">Staf TU Favorit:</span>
               <span id="displayTU" class="font-bold text-pink-700">-</span>
             </div>
+          </div>
+
+          <!-- Tombol Login Siswa Baru -->
+          <div class="pt-2 max-w-md mx-auto space-y-2">
+            <button 
+              type="button" 
+              onclick="window.loginAsNewStudent()"
+              class="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:opacity-95 text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <i class="fa-solid fa-user-plus"></i>
+              <span>Login Siswa Lainnya (Isi Polling Baru)</span>
+            </button>
+            <p class="text-[11px] text-slate-400">
+              Klik tombol di atas bila komputer/ponsel ini digunakan oleh siswa berikutnya.
+            </p>
           </div>
         </section>
       </div>
@@ -869,6 +890,30 @@
         text.textContent = 'Kirim Suara Polling';
         icon.className = 'fa-solid fa-paper-plane';
       }
+    };
+
+    window.loginAsNewStudent = function() {
+      state.namaSiswa = '';
+      state.kelas = '';
+      state.namaGuru = '';
+      state.skorGuru = { keramahan: 0, profesionalisme: 0, empati: 0, keteladanan: 0, inspirasi: 0 };
+      state.namaTU = '';
+      state.skorTU = { keramahan: 0, kecepatan: 0, bantuan: 0, kedisiplinan: 0, auraPositif: 0 };
+      
+      document.getElementById('inputNamaSiswa').value = '';
+      document.getElementById('selectKelas').value = '';
+      document.getElementById('inputNamaGuru').value = '';
+      document.getElementById('inputNamaTU').value = '';
+
+      for (let i = 1; i <= 5; i++) {
+        const lG = document.getElementById('labelScore_guru_' + i);
+        if (lG) { lG.textContent = 'Belum dinilai'; lG.className = 'text-[11px] font-medium text-slate-400'; }
+        const lT = document.getElementById('labelScore_tu_' + i);
+        if (lT) { lT.textContent = 'Belum dinilai'; lT.className = 'text-[11px] font-medium text-slate-400'; }
+      }
+      initStarRatings();
+      validateStep1();
+      window.goToStep(1);
     };
 
     // Admin Panel Logic
