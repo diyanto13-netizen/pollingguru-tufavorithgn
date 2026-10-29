@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Polling Guru & Staf TU Favorit - SMKS PGRI 1 Kota Sukabumi</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome via CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Canvas Confetti untuk Animasi Perayaan -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(243, 232, 255, 0.4);
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #9333ea, #6366f1);
+      border-radius: 9999px;
+    }
+
+    .step-enter {
+      animation: fadeInZoom 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes fadeInZoom {
+      0% {
+        opacity: 0;
+        transform: scale(0.96) translateY(8px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .star-btn {
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.15s ease;
+    }
+    .star-btn:hover {
+      transform: scale(1.25);
+    }
+    .star-btn:active {
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 py-6 px-3 sm:px-6 flex items-center justify-center text-slate-800">
+
+  <!-- Kontainer Utama -->
+  <div class="w-full max-w-xl mx-auto">
+
+    <!-- Header Branding Sekolah -->
+    <header class="text-center mb-5 text-white relative">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-xs sm:text-sm font-semibold tracking-wide text-white mb-2 shadow-sm">
+        <i class="fa-solid fa-award text-amber-300"></i>
+        <span>HARI GURU NASIONAL 2026</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight drop-shadow-md">
+        Polling Guru & Staf TU Favorit
+      </h1>
+      <p class="text-xs sm:text-sm text-purple-100 font-medium mt-1 drop-shadow">
+        Polling Guru & Staf TU Favorit-Dalam Rangka HGN tahun 2026
+      </p>
+
+      <!-- Tombol Akses Menu Admin -->
+      <div class="mt-3 flex justify-center">
+        <button 
+          type="button" 
+          onclick="window.promptAdminLogin()" 
+          class="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-xs font-semibold text-slate-200 transition flex items-center gap-1.5 cursor-pointer"
+        >
+          <i class="fa-solid fa-lock text-amber-300 text-[11px]"></i>
+          <span id="labelAdminStatus">Menu Admin</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Kartu Konten Glassmorphism -->
+    <main class="bg-white/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-2xl border border-white/60 p-5 sm:p-8 relative overflow-hidden transition-all duration-300">
+      
+      <!-- Dekorasi Gradien -->
+      <div class="absolute -top-12 -right-12 w-32 h-32 bg-pink-400/20 rounded-full blur-2xl pointer-events-none"></div>
+      <div class="absolute -bottom-12 -left-12 w-32 h-32 bg-indigo-400/20 rounded-full blur-2xl pointer-events-none"></div>
+
+      <!-- BANNER PERINGATAN BILA SUDAH PERNAH MEMILIH -->
+      <div id="alreadyVotedBanner" class="hidden mb-5 p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs sm:text-sm">
+        <div class="flex items-start gap-2.5">
+          <i class="fa-solid fa-circle-check text-emerald-600 text-lg mt-0.5"></i>
+          <div>
+            <h3 class="font-bold text-slate-900">Hak Suara Anda Sudah Tercatat di Firebase!</h3>
+            <p class="text-slate-600 text-xs mt-0.5 leading-relaxed">
+              Terima kasih atas partisipasi Anda dalam Hari Guru Nasional 2026. Setiap siswa hanya diperbolehkan melakukan polling <strong>1 kali</strong>.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL MENU ADMIN (TERKUNCI KHUSUS ADMIN) -->
+      <section id="panelAdmin" class="hidden step-enter">
+        <div class="border-b border-slate-100 pb-3 mb-4 flex items-center justify-between">
+          <div>
+            <h2 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-shield-halved text-amber-500"></i>
+              <span>Panel Menu Admin</span>
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">
+              5 Besar Suara Tertinggi & Rekaman Data Masuk di Firestore.
+            </p>
+          </div>
+          <button 
+            type="button" 
+            onclick="window.logoutAdmin()" 
+            class="px-2.5 py-1 rounded-lg bg-red-50 text-red-600 text-xs font-bold hover:bg-red-100 transition cursor-pointer flex items-center gap-1"
+          >
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>Tutup</span>
+          </button>
+        </div>
+
+        <!-- Subtab Admin: 5 Besar vs Data Masuk -->
+        <div class="flex rounded-xl bg-slate-100 p-1 mb-4 text-xs font-bold">
+          <button 
+            type="button" 
+            id="tabAdminTop5" 
+            onclick="window.switchAdminSubTab('top5')" 
+            class="flex-1 py-2 rounded-lg bg-white text-indigo-700 shadow-sm transition flex items-center justify-center gap-1.5 cursor-pointer"
+          >
+            <i class="fa-solid fa-trophy text-amber-500"></i>
+            <span>5 Besar (Top 5)</span>
+          </button>
+          <button 
+            type="button" 
+            id="tabAdminDataMasuk" 
+            onclick="window.switchAdminSubTab('dataMasuk')" 
+            class="flex-1 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-1.5 cursor-pointer"
+          >
+            <i class="fa-solid fa-database text-emerald-600"></i>
+            <span id="labelTotalDataMasuk">Data Masuk (0)</span>
+          </button>
+        </div>
+
+        <!-- Konten 5 Besar -->
+        <div id="adminContentTop5" class="space-y-4">
+          <div class="flex rounded-xl bg-slate-100 p-1 text-xs font-bold">
+            <button 
+              type="button" 
+              id="tabTopGuru" 
+              onclick="window.switchLeaderboardTab('guru')" 
+              class="flex-1 py-1.5 rounded-lg bg-white text-indigo-600 shadow-sm transition cursor-pointer"
+            >
+              5 Besar Guru
+            </button>
+            <button 
+              type="button" 
+              id="tabTopTU" 
+              onclick="window.switchLeaderboardTab('tu')" 
+              class="flex-1 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer"
+            >
+              5 Besar Staf TU
+            </button>
+          </div>
+
+          <div id="containerTopGuru" class="space-y-2"></div>
+          <div id="containerTopTU" class="space-y-2 hidden"></div>
+        </div>
+
+        <!-- Konten Data Masuk (Tabel) -->
+        <div id="adminContentDataMasuk" class="space-y-3 hidden">
+          <div class="overflow-x-auto custom-scrollbar border border-slate-200 rounded-xl">
+            <table class="w-full text-left text-xs text-slate-700">
+              <thead class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold text-[10px] uppercase">
+                <tr>
+                  <th class="p-2">Waktu</th>
+                  <th class="p-2">Nama</th>
+                  <th class="p-2">Kelas</th>
+                  <th class="p-2">Guru Pilihan</th>
+                  <th class="p-2 text-center">Skor G</th>
+                  <th class="p-2">TU Pilihan</th>
+                  <th class="p-2 text-center">Skor TU</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyDataMasuk" class="divide-y divide-slate-200 bg-white">
+                <tr><td colspan="7" class="p-4 text-center text-slate-400">Belum ada data suara.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- DASHBOARD UTAMA: HANYA FORMULIR POLLING SISWA -->
+      <div id="dashboardPolling">
+        <!-- Stepper Wizard (Langkah 1, 2, 3) -->
+        <section id="stepperSection" class="mb-6">
+          <div class="flex items-center justify-between relative mb-2">
+            <div class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-slate-200 rounded-full z-0"></div>
+            <div id="stepProgressBar" class="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full z-0 transition-all duration-300" style="width: 0%;"></div>
+
+            <div class="relative z-10 flex flex-col items-center">
+              <div id="stepNode1" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md transition-all">
+                1
+              </div>
+              <span class="text-[11px] font-medium mt-1 text-slate-700">Data Diri</span>
+            </div>
+
+            <div class="relative z-10 flex flex-col items-center">
+              <div id="stepNode2" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm bg-slate-200 text-slate-500 transition-all">
+                2
+              </div>
+              <span class="text-[11px] font-medium mt-1 text-slate-500">Guru</span>
+            </div>
+
+            <div class="relative z-10 flex flex-col items-center">
+              <div id="stepNode3" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm bg-slate-200 text-slate-500 transition-all">
+                3
+              </div>
+              <span class="text-[11px] font-medium mt-1 text-slate-500">Staf TU</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- LANGKAH 1: DATA DIRI -->
+        <section id="step1" class="step-content step-enter">
+          <div class="mb-5 border-b border-slate-100 pb-3">
+            <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-id-card text-indigo-600"></i>
+              Langkah 1: Identitas Siswa
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-500 mt-0.5">
+              Penting: Setiap siswa hanya dapat melakukan polling <strong>1 kali</strong>.
+            </p>
+          </div>
+
+          <form id="formStep1" onsubmit="event.preventDefault();" class="space-y-4">
+            <div>
+              <label for="inputNamaSiswa" class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1">
+                Nama Lengkap Siswa <span class="text-pink-500">*</span>
+              </label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                  <i class="fa-solid fa-user"></i>
+                </span>
+                <input 
+                  type="text" 
+                  id="inputNamaSiswa" 
+                  placeholder="Contoh: Muhammad Farhan" 
+                  class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none text-sm transition text-slate-800 bg-slate-50/50"
+                  required
+                >
+              </div>
+            </div>
+
+            <div>
+              <label for="selectKelas" class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1">
+                Kelas & Jurusan <span class="text-pink-500">*</span>
+              </label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                  <i class="fa-solid fa-graduation-cap"></i>
+                </span>
+                <select 
+                  id="selectKelas" 
+                  class="w-full pl-10 pr-8 py-2.5 rounded-xl border border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none text-sm transition text-slate-800 bg-slate-50/50 appearance-none cursor-pointer"
+                  required
+                >
+                  <option value="" disabled selected>-- Pilih Rombel & Program Keahlian --</option>
+                  <optgroup label="1. TKJ (Teknik Komputer & Jaringan)">
+                    <option value="X TKJ 1">X TKJ 1</option>
+                    <option value="X TKJ 2">X TKJ 2</option>
+                    <option value="XI TKJ 1">XI TKJ 1</option>
+                    <option value="XI TKJ 2">XI TKJ 2</option>
+                    <option value="XII TKJ 1">XII TKJ 1</option>
+                    <option value="XII TKJ 2">XII TKJ 2</option>
+                  </optgroup>
+                  <optgroup label="2. AKL (Akuntansi)">
+                    <option value="X AKL">X AKL</option>
+                    <option value="XI AKL">XI AKL</option>
+                    <option value="XII AKL">XII AKL</option>
+                  </optgroup>
+                  <optgroup label="3. MPLB (Manajemen Perkantoran)">
+                    <option value="X MPLB 1">X MPLB 1</option>
+                    <option value="X MPLB 2">X MPLB 2</option>
+                    <option value="XI MPLB 1">XI MPLB 1</option>
+                    <option value="XI MPLB 2">XI MPLB 2</option>
+                    <option value="XII MPLB 1">XII MPLB 1</option>
+                    <option value="XII MPLB 2">XII MPLB 2</option>
+                  </optgroup>
+                  <optgroup label="4. PM (Bisnis Daring/Pemasaran)">
+                    <option value="X PM 1">X PM 1</option>
+                    <option value="X PM 2">X PM 2</option>
+                    <option value="XI PM 1">XI PM 1</option>
+                    <option value="XI PM 2">XI PM 2</option>
+                    <option value="XII PM 1">XII PM 1</option>
+                    <option value="XII PM 2">XII PM 2</option>
+                  </optgroup>
+                </select>
+                <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
+                  <i class="fa-solid fa-chevron-down text-xs"></i>
+                </span>
+              </div>
+            </div>
+
+            <div class="pt-3">
+              <button 
+                type="button" 
+                id="btnNextStep1" 
+                disabled 
+                onclick="window.goToStep(2)"
+                class="w-full py-3 rounded-xl font-bold text-sm text-white bg-slate-300 cursor-not-allowed transition duration-200 shadow-md flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <span>Lanjut ke Guru Favorit</span>
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <!-- LANGKAH 2: GURU FAVORIT -->
+        <section id="step2" class="step-content hidden">
+          <div class="mb-4 border-b border-slate-100 pb-3 flex items-center justify-between">
+            <div>
+              <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-chalkboard-user text-purple-600"></i>
+                Langkah 2: Guru Favorit
+              </h2>
+              <p class="text-xs text-slate-500 mt-0.5">
+                Pilih nama guru dan beri rating 5-bintang untuk setiap kriteria.
+              </p>
+            </div>
+            <span class="px-2 py-1 rounded bg-purple-100 text-purple-700 text-[10px] font-bold">2/3</span>
+          </div>
+
+          <div>
+            <label for="inputNamaGuru" class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1">
+              Nama Guru Favorit <span class="text-pink-500">*</span>
+            </label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                <i class="fa-solid fa-user-tie"></i>
+              </span>
+              <input 
+                type="text" 
+                id="inputNamaGuru" 
+                placeholder="Ketik nama lengkap atau sapaan guru" 
+                class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none text-sm transition text-slate-800 bg-slate-50/50"
+                required
+              >
+            </div>
+          </div>
+
+          <!-- 5 Kriteria Penilaian Guru -->
+          <div class="mt-4 max-h-[300px] overflow-y-auto pr-1 space-y-3 custom-scrollbar">
+            <p class="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+              <i class="fa-solid fa-star text-amber-400"></i> 5 Kriteria Penilaian Guru
+            </p>
+
+            <div class="bg-slate-50/90 p-3 rounded-xl border border-slate-200/80">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-xs sm:text-sm font-bold text-slate-800">1. Keramahan</span>
+                <span id="labelScore_guru_1" class="text-[11px] font-medium text-slate-400">Belum dinilai</span>
+              </div>
+              <p class="text-[11px] text-slate-500 mb-2">Ramah, menyambut siswa dengan hangat, dan menyenangkan saat mengajar.</p>
+              <div class="flex items-center gap-2" id="starGroup_guru_1"></div>
+            </div>
+
+            <div class="bg-slate-50/90 p-3 rounded-xl border border-slate-200/80">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-xs sm:text-sm font-bold text-slate-800">2. Profesionalisme</span>
+                <span id="labelScore_guru_2" class="text-[11px] font-medium text-slate-400">Belum dinilai</span>
+              </div>
+              <p class="text-[11px] text-slate-500 mb-2">Menguasai materi pelajaran, disiplin waktu, dan adil dalam mendidik siswa.</p>
+              <div class="flex items-center gap-2" id="starGroup_guru_2"></div>
+            </div>
+
+            <div class="bg-slate-50/90 p-3 rounded-xl border border-slate-200/80">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-xs sm:text-sm font-bold text-slate-800">3. Empati</span>
+                <span id="labelScore_guru_3" class="text-[11px] font-medium text-slate-400">Belum dinilai</span>
+              </div>
+              <p class="text-[11px] text-slate-500 mb-2">Memahami kendala siswa, sabar mendengarkan, dan memberi solusi.</p>
+              <div class="flex items-center gap-2" id="starGroup_guru_3"></div>
+            </div>
+
+            <div class="bg-slate-50/90 p-3 rounded-xl border border-slate-200/80">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-xs sm:text-sm font-bold text-slate-800">4. Keteladanan</span>
+                <span id="labelScore_guru_4" class="text-[11px] font-medium text-slate-400">Belum dinilai</span>
+              </div>
+              <p class="text-[11px] text-slate-500 mb-2">Menjadi teladan dalam tutur kata sopan, akhlak, dan integritas.</p>
+              <div class="flex items-center gap-2" id="starGroup_guru_4"></div>
+            </div>
+
+            <div class="bg-slate-50/90 p-3 rounded-xl border border-slate-200/80">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-xs sm:text-sm font-bold text-slate-800">5. Inspirasi</span>
+                <span id="labelScore_guru_5" class="text-[11px] font-medium text-slate-400">Belum dinilai</span>
+              </div>
+              <p class="text-[11px] text-slate-500 mb-2">Mampu memotivasi siswa untuk berprestasi dan menggapai cita-cita.</p>
+              <div class="flex items-center gap-2" id="starGroup_guru_5"></div>
+            </div>
+          </div>
+
+          <div class="pt-4 flex items-center gap-3">
+            <button 
+              type="button" 
+              onclick="window.goToStep(1)" 
+              class="px-4 py-3 rounded-xl border border-slate-300 font-semibold text-sm text-slate-600 hover:bg-slate-100 transition duration-150 flex items-center gap-1.5 cursor-pointer"
+            >
+              <i class="fa-solid fa-arrow-left"></i>
+              <span>Kembali</span>
+            </button>
+            <button 
+              type="button" 
+              id="btnNextStep2" 
+              disabled 
+              onclick="window.goToStep(3)"
+              class="flex-1 py-3 rounded-xl font-bold text-sm text-white bg-slate-300 cursor-not-allowed transition duration-200 shadow-md flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <span>Lanjut ke Staf TU</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </section>
+
+        <!-- LANGKAH 3: STAF TU FAVORIT -->
+        <section id="step3" class="step-content hidden">
+          <div class="mb-4 border-b border-slate-100 pb-3 flex items-center justify-between">
+            <div>
+              <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-users-gear text-pink-600"></i>
+                Langkah 3: Staf TU Favorit
+              </h2>
+              <p class="text-xs text-slate-500 mt-0.5">
+                Nilai pelayanan staf Tata Usaha terbaik pilihanmu.
+              </p>
+            </div>
+            <span class="px-2 py-1 rounded bg-pink-100 text-pink-700 text-[10px] font-bold">3/3</span>
+          </div>
+
+          <div>
+            <label for="inputNamaTU" class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1">
+              Nama Staf TU Favorit <span class="text-pink-500">*</span>
+            </label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                <i class="fa-solid fa-user-check"></i>
+              </span>
+              <input 
+                type="text" 
+                id="inputNamaTU" 
+                placeholder="Ketik nama staf Tata Usaha pilihanmu" 
+                class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 outline-none text-sm transition text-slate-800 bg-slate-50/50"
+                required
+              >
+            </div>
+          </div>
+
+          <!-- 5 Kriteria Penilaian Staf TU -->
+          <div class="mt-4 max-h-[300px] overflow-y-auto pr-1 space-y-3 custom-scrollbar">
+            <p class="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+              <i class="fa-solid fa-star text-amber-400"></i> 5 Kriteria Penilaian Staf TU
+            </p>
+
+            <div class="bg-slate-50/90 p-3 rounded-xl border border-slate-200/80">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-xs sm:text-sm font-bold text-slate-800">1. Keramahan</span>
+                <span id="labelScore_tu_1" class="text-[11px] font-medium text-slate-400">Belum dinilai</span>
+              </div>
+              <p class="text-[11px] text-slate-500 mb-2">Ramah, tersenyum, dan sopan saat melayani administrasi siswa.</p>
+              <div class="flex items-center gap-2" id="starGroup_tu_1"></div>
+            </div>
+
+            <div class="bg-slate-50/90 p-3 rounded-xl border border-slate-200/80">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-xs sm:text-sm font-bold text-slate-800">2. Kecepatan Kerja</span>
+                <span id="labelScore_tu_2" class="text-[11px] font-medium text-slate-400">Belum dinilai</span>
+              </div>
+              <p class="text-[11px] text-slate-500 mb-2">Sigap, cekatan, dan tidak membuang waktu dalam pelayanan berkas.</p>
+              <div class="flex items-center gap-2" id="starGroup_tu_2"></div>
+            </div>
+
+            <div class="bg-slate-50/90 p-3 rounded-xl border border-slate-200/80">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-xs sm:text-sm font-bold text-slate-800">3. Bantuan</span>
+                <span id="labelScore_tu_3" class="text-[11px] font-medium text-slate-400">Belum dinilai</span>
+              </div>
+              <p class="text-[11px] text-slate-500 mb-2">Solutif dan suka membantu bila siswa mengalami kendala administrasi.</p>
+              <div class="flex items-center gap-2" id="starGroup_tu_3"></div>
+            </div>
+
+            <div class="bg-slate-50/90 p-3 rounded-xl border border-slate-200/80">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-xs sm:text-sm font-bold text-slate-800">4. Kedisiplinan</span>
+                <span id="labelScore_tu_4" class="text-[11px] font-medium text-slate-400">Belum dinilai</span>
+              </div>
+              <p class="text-[11px] text-slate-500 mb-2">Tepat waktu bertugas, rapi, dan menjaga ketertiban ruang TU.</p>
+              <div class="flex items-center gap-2" id="starGroup_tu_4"></div>
+            </div>
+
+            <div class="bg-slate-50/90 p-3 rounded-xl border border-slate-200/80">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-xs sm:text-sm font-bold text-slate-800">5. Aura Positif</span>
+                <span id="labelScore_tu_5" class="text-[11px] font-medium text-slate-400">Belum dinilai</span>
+              </div>
+              <p class="text-[11px] text-slate-500 mb-2">Menyenangkan dan membuat lingkungan tata usaha terasa bersahabat.</p>
+              <div class="flex items-center gap-2" id="starGroup_tu_5"></div>
+            </div>
+          </div>
+
+          <div class="pt-4 flex items-center gap-3">
+            <button 
+              type="button" 
+              onclick="window.goToStep(2)" 
+              class="px-4 py-3 rounded-xl border border-slate-300 font-semibold text-sm text-slate-600 hover:bg-slate-100 transition duration-150 flex items-center gap-1.5 cursor-pointer"
+            >
+              <i class="fa-solid fa-arrow-left"></i>
+              <span>Kembali</span>
+            </button>
+            <button 
+              type="button" 
+              id="btnSubmitPolling" 
+              disabled 
+              onclick="window.submitPolling()"
+              class="flex-1 py-3 rounded-xl font-bold text-sm text-white bg-slate-300 cursor-not-allowed transition duration-200 shadow-md flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <span id="btnSubmitText">Kirim Suara Polling</span>
+              <i id="btnSubmitIcon" class="fa-solid fa-paper-plane"></i>
+            </button>
+          </div>
+        </section>
+
+        <!-- LANGKAH 4: LAYAR SUKSES -->
+        <section id="step4" class="step-content hidden text-center py-4">
+          <div class="w-16 h-16 mx-auto rounded-full bg-gradient-to-tr from-emerald-400 to-green-500 text-white flex items-center justify-center text-3xl shadow-xl shadow-green-500/30 mb-3 animate-bounce">
+            <i class="fa-solid fa-check"></i>
+          </div>
+
+          <span class="inline-block px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider mb-2">
+            Suara Berhasil Dicatat!
+          </span>
+
+          <h2 class="text-2xl font-extrabold text-slate-900 mb-1">
+            Terima Kasih, <span id="displayNamaSiswa" class="text-purple-600">Siswa Hebat</span>!
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600 max-w-md mx-auto mb-4 leading-relaxed">
+            Apresiasi Anda telah dicatat secara resmi di Database SMKS PGRI 1 Kota Sukabumi dalam rangka Hari Guru Nasional 2026.
+          </p>
+
+          <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-4 border border-purple-100 text-left mb-4 max-w-md mx-auto space-y-2 text-xs sm:text-sm">
+            <p class="text-xs font-bold text-purple-900 uppercase tracking-wide border-b border-purple-200 pb-1.5 flex items-center gap-1.5">
+              <i class="fa-solid fa-clipboard-check text-purple-600"></i>Ringkasan Suara Anda:
+            </p>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-500">Kelas:</span>
+              <span id="displayKelas" class="font-semibold text-slate-800">-</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-500">Guru Favorit:</span>
+              <span id="displayGuru" class="font-bold text-indigo-700">-</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-500">Staf TU Favorit:</span>
+              <span id="displayTU" class="font-bold text-pink-700">-</span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+    </main>
+
+    <footer class="text-center mt-5 text-white/80 text-xs">
+      <p>© 2026 SMKS PGRI 1 Kota Sukabumi • Hari Guru Nasional</p>
+    </footer>
+
+  </div>
+
+  <!-- SCRIPT FIREBASE SDK & LOGIKA APLIKASI -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js';
+    import { 
+      getFirestore, 
+      collection, 
+      doc, 
+      getDoc, 
+      setDoc, 
+      onSnapshot 
+    } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js';
+
+    const firebaseConfig = {
+      projectId: "inspiring-dialect-4smzh",
+      appId: "1:274091009289:web:4b1e3390f63fbeeee85fd8",
+      apiKey: "AIzaSyCC5kN1xPw0FFFHNi3z3MklU6YYErEGs0c",
+      authDomain: "inspiring-dialect-4smzh.firebaseapp.com",
+      firestoreDatabaseId: "ai-studio-pollinggurustaft-beb0a959-4334-467c-a224-0dd11c7a589a",
+      storageBucket: "inspiring-dialect-4smzh.firebasestorage.app",
+      messagingSenderId: "274091009289"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+
+    const state = {
+      currentStep: 1,
+      namaSiswa: '',
+      kelas: '',
+      namaGuru: '',
+      skorGuru: { keramahan: 0, profesionalisme: 0, empati: 0, keteladanan: 0, inspirasi: 0 },
+      namaTU: '',
+      skorTU: { keramahan: 0, kecepatan: 0, bantuan: 0, kedisiplinan: 0, auraPositif: 0 }
+    };
+
+    let allFirestoreVotes = [];
+    let isAdmin = false;
+    const criteriaGuruKeys = ['keramahan', 'profesionalisme', 'empati', 'keteladanan', 'inspirasi'];
+    const criteriaTUKeys = ['keramahan', 'kecepatan', 'bantuan', 'kedisiplinan', 'auraPositif'];
+
+    const ratingDescriptions = [
+      '',
+      '1 - Perlu Peningkatan',
+      '2 - Cukup Baik',
+      '3 - Baik',
+      '4 - Sangat Baik',
+      '5 - Luar Biasa (Sempurna)'
+    ];
+
+    onSnapshot(collection(db, 'votes'), (snapshot) => {
+      const votes = [];
+      snapshot.forEach(docSnap => {
+        votes.push({ id: docSnap.id, ...docSnap.data() });
+      });
+      allFirestoreVotes = votes;
+      renderAdminData();
+    });
+
+    function initStarRatings() {
+      for (let i = 1; i <= 5; i++) {
+        const cG = document.getElementById('starGroup_guru_' + i);
+        if (cG) cG.innerHTML = createStarButtons('guru', i);
+        const cT = document.getElementById('starGroup_tu_' + i);
+        if (cT) cT.innerHTML = createStarButtons('tu', i);
+      }
+    }
+
+    function createStarButtons(category, criterionIndex) {
+      let html = '';
+      for (let star = 1; star <= 5; star++) {
+        html += `
+          <button 
+            type="button" 
+            class="star-btn text-xl sm:text-2xl text-slate-300 focus:outline-none p-1 cursor-pointer"
+            onclick="window.setRating('${category}', ${criterionIndex}, ${star})"
+            title="${ratingDescriptions[star]}"
+          >
+            <i class="fa-solid fa-star"></i>
+          </button>
+        `;
+      }
+      return html;
+    }
+
+    window.setRating = function(category, criterionIndex, rating) {
+      const key = category === 'guru' ? criteriaGuruKeys[criterionIndex - 1] : criteriaTUKeys[criterionIndex - 1];
+      if (category === 'guru') state.skorGuru[key] = rating;
+      else state.skorTU[key] = rating;
+
+      const labelElem = document.getElementById('labelScore_' + category + '_' + criterionIndex);
+      if (labelElem) {
+        labelElem.textContent = ratingDescriptions[rating];
+        labelElem.className = 'text-[11px] font-bold text-amber-500';
+      }
+
+      const container = document.getElementById('starGroup_' + category + '_' + criterionIndex);
+      if (container) {
+        const buttons = container.querySelectorAll('.star-btn');
+        buttons.forEach((btn, idx) => {
+          if (idx + 1 <= rating) {
+            btn.className = 'star-btn text-xl sm:text-2xl text-amber-400 focus:outline-none p-1 drop-shadow-sm cursor-pointer';
+          } else {
+            btn.className = 'star-btn text-xl sm:text-2xl text-slate-300 focus:outline-none p-1 cursor-pointer';
+          }
+        });
+      }
+
+      if (category === 'guru') validateStep2();
+      else validateStep3();
+    };
+
+    function validateStep1() {
+      const nama = document.getElementById('inputNamaSiswa').value.trim();
+      const kelas = document.getElementById('selectKelas').value;
+      const btn = document.getElementById('btnNextStep1');
+      state.namaSiswa = nama;
+      state.kelas = kelas;
+      const isValid = nama.length >= 2 && kelas !== '';
+      btn.disabled = !isValid;
+      btn.className = isValid 
+        ? 'w-full py-3 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:opacity-95 shadow-lg shadow-purple-500/25 flex items-center justify-center gap-2 cursor-pointer'
+        : 'w-full py-3 rounded-xl font-bold text-sm text-white bg-slate-300 cursor-not-allowed shadow-md flex items-center justify-center gap-2';
+    }
+
+    function validateStep2() {
+      const namaGuru = document.getElementById('inputNamaGuru').value.trim();
+      state.namaGuru = namaGuru;
+      const allRated = criteriaGuruKeys.every(k => state.skorGuru[k] > 0);
+      const isValid = namaGuru.length >= 2 && allRated;
+      const btn = document.getElementById('btnNextStep2');
+      btn.disabled = !isValid;
+      btn.className = isValid 
+        ? 'flex-1 py-3 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:opacity-95 shadow-lg shadow-purple-500/25 flex items-center justify-center gap-2 cursor-pointer'
+        : 'flex-1 py-3 rounded-xl font-bold text-sm text-white bg-slate-300 cursor-not-allowed shadow-md flex items-center justify-center gap-2';
+    }
+
+    function validateStep3() {
+      const namaTU = document.getElementById('inputNamaTU').value.trim();
+      state.namaTU = namaTU;
+      const allRated = criteriaTUKeys.every(k => state.skorTU[k] > 0);
+      const isValid = namaTU.length >= 2 && allRated;
+      const btn = document.getElementById('btnSubmitPolling');
+      btn.disabled = !isValid;
+      btn.className = isValid 
+        ? 'flex-1 py-3 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 hover:opacity-95 shadow-lg shadow-pink-500/25 flex items-center justify-center gap-2 cursor-pointer'
+        : 'flex-1 py-3 rounded-xl font-bold text-sm text-white bg-slate-300 cursor-not-allowed shadow-md flex items-center justify-center gap-2';
+    }
+
+    window.goToStep = function(step) {
+      for (let s = 1; s <= 4; s++) {
+        const sec = document.getElementById('step' + s);
+        if (sec) {
+          sec.classList.add('hidden');
+          sec.classList.remove('step-enter');
+        }
+      }
+      const target = document.getElementById('step' + step);
+      if (target) {
+        target.classList.remove('hidden');
+        target.classList.add('step-enter');
+      }
+      state.currentStep = step;
+      updateStepperUI(step);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    function updateStepperUI(step) {
+      const pBar = document.getElementById('stepProgressBar');
+      const sSec = document.getElementById('stepperSection');
+      if (step === 4) {
+        if (sSec) sSec.classList.add('hidden');
+        return;
+      }
+      if (sSec) sSec.classList.remove('hidden');
+      if (step === 1) pBar.style.width = '0%';
+      if (step === 2) pBar.style.width = '50%';
+      if (step === 3) pBar.style.width = '100%';
+
+      for (let i = 1; i <= 3; i++) {
+        const node = document.getElementById('stepNode' + i);
+        if (!node) continue;
+        if (i < step) {
+          node.className = 'w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm bg-emerald-500 text-white shadow-md';
+          node.innerHTML = '<i class="fa-solid fa-check"></i>';
+        } else if (i === step) {
+          node.className = 'w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md scale-110 ring-4 ring-purple-200';
+          node.textContent = i;
+        } else {
+          node.className = 'w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm bg-slate-200 text-slate-500';
+          node.textContent = i;
+        }
+      }
+    }
+
+    function checkSingleVoteRestriction() {
+      const voteToken = localStorage.getItem('smks_pgri1_hgn2026_voted');
+      if (voteToken) {
+        document.getElementById('alreadyVotedBanner').classList.remove('hidden');
+        document.getElementById('stepperSection').classList.add('hidden');
+        document.getElementById('step1').classList.add('hidden');
+        return true;
+      }
+      return false;
+    }
+
+    function getStudentVoteDocId(studentClass, studentName) {
+      const cleanClass = studentClass.trim().replace(/[^a-zA-Z0-9]/g, '_');
+      const cleanName = studentName.trim().toLowerCase().replace(/[^a-zA-Z0-9]/g, '_');
+      return `${cleanClass}__${cleanName}`;
+    }
+
+    window.submitPolling = async function() {
+      if (localStorage.getItem('smks_pgri1_hgn2026_voted')) {
+        alert('Anda sudah pernah menggunakan hak suara pada perangkat ini!');
+        checkSingleVoteRestriction();
+        return;
+      }
+
+      const voteDocId = getStudentVoteDocId(state.kelas, state.namaSiswa);
+      const btn = document.getElementById('btnSubmitPolling');
+      const text = document.getElementById('btnSubmitText');
+      const icon = document.getElementById('btnSubmitIcon');
+
+      btn.disabled = true;
+      text.textContent = 'Menyimpan...';
+      icon.className = 'fa-solid fa-spinner fa-spin';
+
+      try {
+        const docRef = doc(db, 'votes', voteDocId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          alert(`Siswa atas nama "${state.namaSiswa}" di kelas "${state.kelas}" sudah pernah mengisi polling! Setiap siswa hanya diperbolehkan 1 kali suara.`);
+          btn.disabled = false;
+          text.textContent = 'Kirim Suara Polling';
+          icon.className = 'fa-solid fa-paper-plane';
+          return;
+        }
+
+        const avgG = parseFloat((Object.values(state.skorGuru).reduce((a, b) => a + b, 0) / 5).toFixed(1));
+        const avgT = parseFloat((Object.values(state.skorTU).reduce((a, b) => a + b, 0) / 5).toFixed(1));
+
+        const voteData = {
+          namaSiswa: state.namaSiswa,
+          kelas: state.kelas,
+          namaGuru: state.namaGuru,
+          skorGuru: state.skorGuru,
+          rataRataGuru: avgG,
+          namaTU: state.namaTU,
+          skorTU: state.skorTU,
+          rataRataTU: avgT,
+          createdAt: new Date().toISOString()
+        };
+
+        await setDoc(docRef, voteData);
+
+        localStorage.setItem('smks_pgri1_hgn2026_voted', JSON.stringify({
+          namaSiswa: state.namaSiswa,
+          kelas: state.kelas,
+          time: new Date().toISOString()
+        }));
+
+        document.getElementById('displayNamaSiswa').textContent = state.namaSiswa;
+        document.getElementById('displayKelas').textContent = state.kelas;
+        document.getElementById('displayGuru').textContent = state.namaGuru;
+        document.getElementById('displayTU').textContent = state.namaTU;
+
+        window.goToStep(4);
+        confetti({ particleCount: 110, spread: 75, origin: { y: 0.6 } });
+
+      } catch (err) {
+        alert('Gagal menyimpan: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        text.textContent = 'Kirim Suara Polling';
+        icon.className = 'fa-solid fa-paper-plane';
+      }
+    };
+
+    // Admin Panel Logic
+    window.promptAdminLogin = function() {
+      if (isAdmin) {
+        document.getElementById('dashboardPolling').classList.toggle('hidden');
+        document.getElementById('panelAdmin').classList.toggle('hidden');
+        return;
+      }
+
+      const pin = prompt('Masukkan PIN Menu Admin (Default: admin2026):');
+      if (pin === 'admin2026' || pin === 'pgri2026') {
+        isAdmin = true;
+        document.getElementById('labelAdminStatus').textContent = 'Keluar Admin';
+        document.getElementById('dashboardPolling').classList.add('hidden');
+        document.getElementById('panelAdmin').classList.remove('hidden');
+        renderAdminData();
+      } else if (pin !== null) {
+        alert('PIN salah!');
+      }
+    };
+
+    window.logoutAdmin = function() {
+      document.getElementById('panelAdmin').classList.add('hidden');
+      document.getElementById('dashboardPolling').classList.remove('hidden');
+    };
+
+    window.switchAdminSubTab = function(sub) {
+      const tabT = document.getElementById('tabAdminTop5');
+      const tabD = document.getElementById('tabAdminDataMasuk');
+      const conT = document.getElementById('adminContentTop5');
+      const conD = document.getElementById('adminContentDataMasuk');
+      if (sub === 'top5') {
+        tabT.className = 'flex-1 py-2 rounded-lg bg-white text-indigo-700 shadow-sm transition flex items-center justify-center gap-1.5 cursor-pointer';
+        tabD.className = 'flex-1 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-1.5 cursor-pointer';
+        conT.classList.remove('hidden');
+        conD.classList.add('hidden');
+      } else {
+        tabD.className = 'flex-1 py-2 rounded-lg bg-white text-indigo-700 shadow-sm transition flex items-center justify-center gap-1.5 cursor-pointer';
+        tabT.className = 'flex-1 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-1.5 cursor-pointer';
+        conD.classList.remove('hidden');
+        conT.classList.add('hidden');
+      }
+    };
+
+    window.switchLeaderboardTab = function(cat) {
+      const tG = document.getElementById('tabTopGuru');
+      const tT = document.getElementById('tabTopTU');
+      const cG = document.getElementById('containerTopGuru');
+      const cT = document.getElementById('containerTopTU');
+      if (cat === 'guru') {
+        tG.className = 'flex-1 py-1.5 rounded-lg bg-white text-indigo-600 shadow-sm transition cursor-pointer';
+        tT.className = 'flex-1 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer';
+        cG.classList.remove('hidden');
+        cT.classList.add('hidden');
+      } else {
+        tT.className = 'flex-1 py-1.5 rounded-lg bg-white text-pink-600 shadow-sm transition cursor-pointer';
+        tG.className = 'flex-1 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer';
+        cT.classList.remove('hidden');
+        cG.classList.add('hidden');
+      }
+    };
+
+    function renderAdminData() {
+      const lblTotal = document.getElementById('labelTotalDataMasuk');
+      if (lblTotal) lblTotal.textContent = `Data Masuk (${allFirestoreVotes.length})`;
+
+      // Render Top 5 Guru & TU
+      const mapG = {};
+      const mapT = {};
+      allFirestoreVotes.forEach(v => {
+        const rawG = (v.namaGuru || '').trim();
+        if (rawG) {
+          const k = rawG.toLowerCase();
+          if (!mapG[k]) mapG[k] = { nama: rawG, count: 0, sum: 0 };
+          mapG[k].count++;
+          mapG[k].sum += parseFloat(v.rataRataGuru) || 0;
+        }
+        const rawT = (v.namaTU || '').trim();
+        if (rawT) {
+          const k = rawT.toLowerCase();
+          if (!mapT[k]) mapT[k] = { nama: rawT, count: 0, sum: 0 };
+          mapT[k].count++;
+          mapT[k].sum += parseFloat(v.rataRataTU) || 0;
+        }
+      });
+
+      const listG = Object.values(mapG).map(i => ({ nama: i.nama, totalSuara: i.count, avg: (i.sum / i.count).toFixed(1) }));
+      listG.sort((a,b) => b.totalSuara - a.totalSuara);
+      const listT = Object.values(mapT).map(i => ({ nama: i.nama, totalSuara: i.count, avg: (i.sum / i.count).toFixed(1) }));
+      listT.sort((a,b) => b.totalSuara - a.totalSuara);
+
+      const cG = document.getElementById('containerTopGuru');
+      const cT = document.getElementById('containerTopTU');
+      if (cG) cG.innerHTML = buildTopCards(listG.slice(0, 5), 'Guru');
+      if (cT) cT.innerHTML = buildTopCards(listT.slice(0, 5), 'Staf TU');
+
+      // Render Tabel Data Masuk
+      const tbody = document.getElementById('tbodyDataMasuk');
+      if (tbody) {
+        if (allFirestoreVotes.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-slate-400">Belum ada data suara di database.</td></tr>';
+        } else {
+          tbody.innerHTML = allFirestoreVotes.map(v => `
+            <tr class="hover:bg-slate-50">
+              <td class="p-2 font-mono text-[10px] text-slate-500">${v.createdAt ? new Date(v.createdAt).toLocaleTimeString('id-ID') : '-'}</td>
+              <td class="p-2 font-semibold text-slate-900">${v.namaSiswa}</td>
+              <td class="p-2"><span class="px-1.5 py-0.5 rounded bg-slate-100 text-[10px]">${v.kelas}</span></td>
+              <td class="p-2 font-medium text-indigo-700">${v.namaGuru}</td>
+              <td class="p-2 text-center font-bold text-amber-500">⭐ ${v.rataRataGuru}</td>
+              <td class="p-2 font-medium text-pink-700">${v.namaTU}</td>
+              <td class="p-2 text-center font-bold text-amber-500">⭐ ${v.rataRataTU}</td>
+            </tr>
+          `).join('');
+        }
+      }
+    }
+
+    function buildTopCards(list, cat) {
+      if (list.length === 0) return '<p class="text-center py-4 text-slate-400 text-xs">Belum ada suara.</p>';
+      const medals = ['🥇', '🥈', '🥉', '#4', '#5'];
+      return list.map((item, idx) => `
+        <div class="p-3 rounded-xl border ${idx === 0 ? 'border-amber-300 bg-amber-50/70' : 'border-slate-200 bg-white'} flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <span class="text-lg">${medals[idx] || '#' + (idx+1)}</span>
+            <div>
+              <h4 class="font-bold text-xs sm:text-sm text-slate-900">${item.nama}</h4>
+              <p class="text-[10px] text-slate-500">⭐ ${item.avg} / 5 • ${cat}</p>
+            </div>
+          </div>
+          <span class="px-2.5 py-1 rounded-full font-black text-xs ${cat === 'Guru' ? 'bg-indigo-100 text-indigo-700' : 'bg-pink-100 text-pink-700'}">
+            ${item.totalSuara} Suara
+          </span>
+        </div>
+      `).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initStarRatings();
+      checkSingleVoteRestriction();
+      document.getElementById('inputNamaSiswa').addEventListener('input', validateStep1);
+      document.getElementById('selectKelas').addEventListener('change', validateStep1);
+      document.getElementById('inputNamaGuru').addEventListener('input', validateStep2);
+      document.getElementById('inputNamaTU').addEventListener('input', validateStep3);
+    });
+  </script>
+</body>
+</html>

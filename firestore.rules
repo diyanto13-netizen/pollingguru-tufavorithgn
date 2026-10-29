@@ -1,0 +1,33 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Koleksi Polling Suara Siswa SMKS PGRI 1 Kota Sukabumi
+    match /votes/{voteId} {
+      // Pembacaan publik untuk kalkulasi real-time 5 Besar Teratas (Top 5)
+      allow read: if true;
+
+      // Pembuatan suara baru dengan validasi ketat:
+      // 1. Dokumen belum ada sebelumnya (mencegah duplikasi suara dari siswa & kelas yang sama)
+      // 2. Format dan batas ukuran teks valid
+      allow create: if !exists(/databases/$(database)/documents/votes/$(voteId))
+                    && request.resource.data.namaSiswa is string
+                    && request.resource.data.namaSiswa.size() >= 2
+                    && request.resource.data.namaSiswa.size() <= 100
+                    && request.resource.data.kelas is string
+                    && request.resource.data.kelas.size() >= 2
+                    && request.resource.data.namaGuru is string
+                    && request.resource.data.namaGuru.size() >= 2
+                    && request.resource.data.namaTU is string
+                    && request.resource.data.namaTU.size() >= 2;
+
+      // Suara yang sudah masuk permanen (tidak dapat diubah atau dihapus)
+      allow update, delete: if false;
+    }
+  }
+}
