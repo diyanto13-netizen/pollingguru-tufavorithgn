@@ -56,6 +56,11 @@ import {
   DEFAULT_STAFF, 
   MasterStudent 
 } from './defaultMasterData';
+import {
+  downloadExcelTemplate,
+  parseExcelFile,
+  exportRekapToExcel
+} from './excelUtils';
 
 enum OperationType {
   CREATE = 'create',
@@ -841,20 +846,67 @@ export default function App() {
     setShowPasteModal(false);
   };
 
-  // Handle File Upload from input (.csv, .txt)
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, type: 'siswa' | 'guru' | 'tu') => {
+  // Handle File Upload for Excel (.xlsx, .xls) and CSV/TXT
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: 'siswa' | 'guru' | 'tu') => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = async (event) => {
-      const text = event.target?.result as string;
-      if (text) {
-        await handleProcessRawText(type, text);
+    const fileName = file.name.toLowerCase();
+    const isExcel = fileName.endsWith('.xlsx') || fileName.endsWith('.xls');
+
+    setIsSavingMaster(true);
+    try {
+      if (isExcel) {
+        const result = await parseExcelFile(
+          file, 
+          type, 
+          studentFilterClass !== 'SEMUA' ? studentFilterClass : 'X TKJ 1'
+        );
+
+        if (type === 'siswa' && result.students && result.students.length > 0) {
+          const updated = [...masterStudents];
+          result.students.forEach(item => {
+            const exists = updated.some(
+              existing => existing.kelas.toLowerCase() === item.kelas.toLowerCase() &&
+                          existing.nama.toLowerCase() === item.nama.toLowerCase()
+            );
+            if (!exists) {
+              updated.push(item);
+            }
+          });
+          await handleSaveMasterToCloud(updated, masterTeachers, masterStaff);
+          alert(`Berhasil mengunggah dan menyimpan ${result.students.length} data siswa dari file Excel!`);
+        } else if (type === 'guru' && result.teachers && result.teachers.length > 0) {
+          const set = new Set([...masterTeachers, ...result.teachers]);
+          const updated = Array.from(set);
+          await handleSaveMasterToCloud(masterStudents, updated, masterStaff);
+          alert(`Berhasil mengunggah dan menyimpan ${result.teachers.length} data guru dari file Excel!`);
+        } else if (type === 'tu' && result.staff && result.staff.length > 0) {
+          const set = new Set([...masterStaff, ...result.staff]);
+          const updated = Array.from(set);
+          await handleSaveMasterToCloud(masterStudents, masterTeachers, updated);
+          alert(`Berhasil mengunggah dan menyimpan ${result.staff.length} data staf TU dari file Excel!`);
+        } else {
+          alert('Tidak ditemukan baris data valid di dalam file Excel. Silakan gunakan format template Excel resmi yang disediakan.');
+        }
+      } else {
+        // Fallback for CSV / TXT
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+          const text = event.target?.result as string;
+          if (text) {
+            await handleProcessRawText(type, text);
+          }
+        };
+        reader.readAsText(file);
       }
-    };
-    reader.readAsText(file);
-    e.target.value = ''; // reset
+    } catch (err) {
+      console.error('Error handling upload:', err);
+      alert('Terjadi kesalahan saat memproses file. Pastikan file berformat Excel (.xlsx/.xls) yang valid.');
+    } finally {
+      setIsSavingMaster(false);
+      e.target.value = '';
+    }
   };
 
   // Add Single Student
@@ -1808,12 +1860,12 @@ export default function App() {
                 </button>
                 <button
                   type="button"
-                  onClick={handleExportCSV}
+                  onClick={() => exportRekapToExcel(filteredFirestoreVotes, top5Guru, top5TU)}
                   className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:opacity-95 text-white text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-sm"
-                  title="Unduh seluruh suara dalam format CSV untuk Excel"
+                  title="Unduh laporan resmi rekapitulasi format Excel (.xlsx) rapi siap cetak"
                 >
-                  <Download className="w-4 h-4" />
-                  <span>Unduh Rekap CSV</span>
+                  <FileSpreadsheet className="w-4 h-4" />
+                  <span>Unduh Rekap Excel (.xlsx)</span>
                 </button>
               </div>
             </div>
@@ -2208,11 +2260,11 @@ export default function App() {
                     <div className="bg-indigo-50/50 border border-indigo-100 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3">
                       <div>
                         <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                          <Upload className="w-4 h-4 text-indigo-600" />
-                          <span>Upload File Data Siswa (CSV / Excel / TXT)</span>
+                          <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
+                          <span>Upload File Excel (.xlsx / .xls) Data Siswa</span>
                         </h4>
                         <p className="text-[11px] text-slate-500 mt-0.5">
-                          Format kolom: <strong>Kelas, Nama Siswa</strong> (Contoh: <code className="bg-slate-200 px-1 py-0.5 rounded text-[10px]">X TKJ 1, Aditya Pratama</code>)
+                          Format resmi: <strong>Kelas &amp; Rombel</strong> dan <strong>Nama Lengkap Siswa</strong> (Tersedia format siap cetak 21 rombel).
                         </p>
                       </div>
 
@@ -2220,34 +2272,34 @@ export default function App() {
                         <input
                           ref={studentFileInputRef}
                           type="file"
-                          accept=".csv,.txt"
+                          accept=".xlsx,.xls,.csv,.txt"
                           onChange={(e) => handleFileUpload(e, 'siswa')}
                           className="hidden"
                         />
                         <button
                           type="button"
                           onClick={() => studentFileInputRef.current?.click()}
-                          className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+                          className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition flex items-center gap-1.5 cursor-pointer shadow-xs"
                         >
-                          <Upload className="w-3.5 h-3.5" />
-                          <span>Pilih File CSV</span>
+                          <FileSpreadsheet className="w-3.5 h-3.5" />
+                          <span>Pilih File Excel (.xlsx)</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => downloadExcelTemplate('siswa')}
+                          className="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-emerald-300 text-emerald-800 font-bold text-xs transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+                          title="Unduh format tabel Excel resmi 21 rombel siap cetak & diisi"
+                        >
+                          <Download className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>Unduh Template Excel Siap Cetak</span>
                         </button>
                         <button
                           type="button"
                           onClick={() => setShowPasteModal(true)}
-                          className="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-semibold text-xs transition flex items-center gap-1.5 cursor-pointer"
+                          className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-600 font-semibold text-xs transition flex items-center gap-1 cursor-pointer"
                         >
-                          <FileText className="w-3.5 h-3.5 text-indigo-600" />
-                          <span>Tempel / Paste Teks</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => downloadTemplateCSV('siswa')}
-                          className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-600 text-xs transition flex items-center gap-1 cursor-pointer"
-                          title="Unduh contoh template format CSV"
-                        >
-                          <Download className="w-3.5 h-3.5 text-slate-500" />
-                          <span>Contoh Format</span>
+                          <FileText className="w-3 h-3 text-slate-500" />
+                          <span>Tempel Teks</span>
                         </button>
                       </div>
                     </div>
@@ -2386,11 +2438,11 @@ export default function App() {
                     <div className="bg-indigo-50/50 border border-indigo-100 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3">
                       <div>
                         <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                          <Award className="w-4 h-4 text-indigo-600" />
-                          <span>Upload File Data Guru Favorit (CSV / TXT)</span>
+                          <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
+                          <span>Upload File Excel (.xlsx / .xls) Data Guru</span>
                         </h4>
                         <p className="text-[11px] text-slate-500 mt-0.5">
-                          Format: 1 nama guru per baris (Contoh: <code className="bg-slate-200 px-1 py-0.5 rounded text-[10px]">Drs. H. Mulyadi, M.Pd.</code>)
+                          Format resmi: <strong>Nama Lengkap Guru beserta Gelar</strong> dan <strong>Mata Pelajaran</strong> (Tersedia format siap cetak).
                         </p>
                       </div>
 
@@ -2398,33 +2450,34 @@ export default function App() {
                         <input
                           ref={teacherFileInputRef}
                           type="file"
-                          accept=".csv,.txt"
+                          accept=".xlsx,.xls,.csv,.txt"
                           onChange={(e) => handleFileUpload(e, 'guru')}
                           className="hidden"
                         />
                         <button
                           type="button"
                           onClick={() => teacherFileInputRef.current?.click()}
-                          className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+                          className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition flex items-center gap-1.5 cursor-pointer shadow-xs"
                         >
-                          <Upload className="w-3.5 h-3.5" />
-                          <span>Pilih File CSV</span>
+                          <FileSpreadsheet className="w-3.5 h-3.5" />
+                          <span>Pilih File Excel (.xlsx)</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => downloadExcelTemplate('guru')}
+                          className="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-emerald-300 text-emerald-800 font-bold text-xs transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+                          title="Unduh format tabel Excel resmi dewan guru siap cetak & diisi"
+                        >
+                          <Download className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>Unduh Template Excel Siap Cetak</span>
                         </button>
                         <button
                           type="button"
                           onClick={() => setShowPasteModal(true)}
-                          className="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-semibold text-xs transition flex items-center gap-1.5 cursor-pointer"
+                          className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-600 font-semibold text-xs transition flex items-center gap-1 cursor-pointer"
                         >
-                          <FileText className="w-3.5 h-3.5 text-indigo-600" />
-                          <span>Tempel / Paste Teks</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => downloadTemplateCSV('guru')}
-                          className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-600 text-xs transition flex items-center gap-1 cursor-pointer"
-                        >
-                          <Download className="w-3.5 h-3.5 text-slate-500" />
-                          <span>Contoh Format</span>
+                          <FileText className="w-3 h-3 text-slate-500" />
+                          <span>Tempel Teks</span>
                         </button>
                       </div>
                     </div>
@@ -2500,11 +2553,11 @@ export default function App() {
                     <div className="bg-purple-50/50 border border-purple-100 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3">
                       <div>
                         <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                          <HeartHandshake className="w-4 h-4 text-purple-600" />
-                          <span>Upload File Data Staf TU Favorit (CSV / TXT)</span>
+                          <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
+                          <span>Upload File Excel (.xlsx / .xls) Data Staf TU</span>
                         </h4>
                         <p className="text-[11px] text-slate-500 mt-0.5">
-                          Format: 1 nama staf TU per baris (Contoh: <code className="bg-slate-200 px-1 py-0.5 rounded text-[10px]">Pak Hendra Permana (Kepala Tata Usaha)</code>)
+                          Format resmi: <strong>Nama Lengkap Staf Tata Usaha</strong> dan <strong>Bagian / Unit Pelayanan</strong> (Tersedia format siap cetak).
                         </p>
                       </div>
 
@@ -2512,33 +2565,34 @@ export default function App() {
                         <input
                           ref={staffFileInputRef}
                           type="file"
-                          accept=".csv,.txt"
+                          accept=".xlsx,.xls,.csv,.txt"
                           onChange={(e) => handleFileUpload(e, 'tu')}
                           className="hidden"
                         />
                         <button
                           type="button"
                           onClick={() => staffFileInputRef.current?.click()}
-                          className="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+                          className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition flex items-center gap-1.5 cursor-pointer shadow-xs"
                         >
-                          <Upload className="w-3.5 h-3.5" />
-                          <span>Pilih File CSV</span>
+                          <FileSpreadsheet className="w-3.5 h-3.5" />
+                          <span>Pilih File Excel (.xlsx)</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => downloadExcelTemplate('tu')}
+                          className="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-emerald-300 text-emerald-800 font-bold text-xs transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+                          title="Unduh format tabel Excel resmi staf TU siap cetak & diisi"
+                        >
+                          <Download className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>Unduh Template Excel Siap Cetak</span>
                         </button>
                         <button
                           type="button"
                           onClick={() => setShowPasteModal(true)}
-                          className="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-semibold text-xs transition flex items-center gap-1.5 cursor-pointer"
+                          className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-600 font-semibold text-xs transition flex items-center gap-1 cursor-pointer"
                         >
-                          <FileText className="w-3.5 h-3.5 text-purple-600" />
-                          <span>Tempel / Paste Teks</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => downloadTemplateCSV('tu')}
-                          className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-600 text-xs transition flex items-center gap-1 cursor-pointer"
-                        >
-                          <Download className="w-3.5 h-3.5 text-slate-500" />
-                          <span>Contoh Format</span>
+                          <FileText className="w-3 h-3 text-slate-500" />
+                          <span>Tempel Teks</span>
                         </button>
                       </div>
                     </div>
