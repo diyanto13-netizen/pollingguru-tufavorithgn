@@ -985,7 +985,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-700 via-purple-700 to-pink-600 text-slate-800 flex flex-col font-sans relative overflow-x-hidden selection:bg-purple-200 selection:text-purple-900">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-700 via-purple-700 to-pink-600 text-black flex flex-col font-sans relative overflow-x-hidden selection:bg-purple-200 selection:text-purple-900">
       {/* Top Navbar */}
       <nav className="bg-slate-900/90 backdrop-blur-md border-b border-white/10 px-4 py-2.5 text-white sticky top-0 z-50 shadow-md">
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-3">
@@ -1157,7 +1157,7 @@ export default function App() {
                         Langkah 1/3
                       </span>
                     </div>
-                    <p className="text-xs sm:text-sm text-slate-500 mt-1">
+                    <p className="text-xs sm:text-sm text-black font-medium mt-1">
                       Pilih <strong>Kelas &amp; Program Keahlian</strong> Anda terlebih dahulu, kemudian pilih <strong>Nama Lengkap Siswa</strong> dari daftar yang tersedia.
                     </p>
                   </div>
@@ -1166,13 +1166,13 @@ export default function App() {
                     {/* 1. ATAS: Dropdown Kelas & Program Keahlian (21 Rombel Resmi) */}
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <label className="block text-xs sm:text-sm font-semibold text-slate-700">
-                          Kelas &amp; Program Keahlian <span className="text-pink-500">*</span>
+                        <label className="block text-xs sm:text-sm font-bold text-black">
+                          Kelas &amp; Program Keahlian <span className="text-pink-600">*</span>
                         </label>
-                        <span className="text-[11px] text-slate-400 font-mono">21 Rombel Resmi</span>
+                        <span className="text-[11px] text-black font-mono font-bold">21 Rombel Resmi</span>
                       </div>
                       <div className="relative">
-                        <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                        <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-black">
                           <GraduationCap className="w-4 h-4 text-indigo-600" />
                         </span>
                         <select
@@ -1189,40 +1189,40 @@ export default function App() {
                               if (!inClass) setNamaSiswa('');
                             }
                           }}
-                          className="w-full pl-10 pr-8 py-2.5 rounded-xl border border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none text-sm transition text-slate-800 bg-slate-50/50 appearance-none cursor-pointer font-medium"
+                          className="w-full pl-10 pr-8 py-2.5 rounded-xl border border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none text-sm transition text-black bg-slate-50/50 appearance-none cursor-pointer font-semibold"
                         >
-                          <option value="" disabled>-- Pilih Kelas &amp; Program Keahlian --</option>
-                          <optgroup label="1. TKJ (Teknik Komputer &amp; Jaringan)">
-                            <option value="X TKJ 1">X TKJ 1</option>
-                            <option value="X TKJ 2">X TKJ 2</option>
-                            <option value="XI TKJ 1">XI TKJ 1</option>
-                            <option value="XI TKJ 2">XI TKJ 2</option>
-                            <option value="XII TKJ 1">XII TKJ 1</option>
-                            <option value="XII TKJ 2">XII TKJ 2</option>
+                          <option value="" disabled className="text-black font-medium">-- Pilih Kelas &amp; Program Keahlian --</option>
+                          <optgroup label="1. TKJ (Teknik Komputer &amp; Jaringan)" className="text-black font-bold">
+                            <option value="X TKJ 1" className="text-black font-medium">X TKJ 1</option>
+                            <option value="X TKJ 2" className="text-black font-medium">X TKJ 2</option>
+                            <option value="XI TKJ 1" className="text-black font-medium">XI TKJ 1</option>
+                            <option value="XI TKJ 2" className="text-black font-medium">XI TKJ 2</option>
+                            <option value="XII TKJ 1" className="text-black font-medium">XII TKJ 1</option>
+                            <option value="XII TKJ 2" className="text-black font-medium">XII TKJ 2</option>
                           </optgroup>
-                          <optgroup label="2. AKL (Akuntansi)">
-                            <option value="X AKL">X AKL</option>
-                            <option value="XI AKL">XI AKL</option>
-                            <option value="XII AKL">XII AKL</option>
+                          <optgroup label="2. AKL (Akuntansi)" className="text-black font-bold">
+                            <option value="X AKL" className="text-black font-medium">X AKL</option>
+                            <option value="XI AKL" className="text-black font-medium">XI AKL</option>
+                            <option value="XII AKL" className="text-black font-medium">XII AKL</option>
                           </optgroup>
-                          <optgroup label="3. MPLB (Manajemen Perkantoran)">
-                            <option value="X MPLB 1">X MPLB 1</option>
-                            <option value="X MPLB 2">X MPLB 2</option>
-                            <option value="XI MPLB 1">XI MPLB 1</option>
-                            <option value="XI MPLB 2">XI MPLB 2</option>
-                            <option value="XII MPLB 1">XII MPLB 1</option>
-                            <option value="XII MPLB 2">XII MPLB 2</option>
+                          <optgroup label="3. MPLB (Manajemen Perkantoran)" className="text-black font-bold">
+                            <option value="X MPLB 1" className="text-black font-medium">X MPLB 1</option>
+                            <option value="X MPLB 2" className="text-black font-medium">X MPLB 2</option>
+                            <option value="XI MPLB 1" className="text-black font-medium">XI MPLB 1</option>
+                            <option value="XI MPLB 2" className="text-black font-medium">XI MPLB 2</option>
+                            <option value="XII MPLB 1" className="text-black font-medium">XII MPLB 1</option>
+                            <option value="XII MPLB 2" className="text-black font-medium">XII MPLB 2</option>
                           </optgroup>
-                          <optgroup label="4. PM (Bisnis Daring/Pemasaran)">
-                            <option value="X PM 1">X PM 1</option>
-                            <option value="X PM 2">X PM 2</option>
-                            <option value="XI PM 1">XI PM 1</option>
-                            <option value="XI PM 2">XI PM 2</option>
-                            <option value="XII PM 1">XII PM 1</option>
-                            <option value="XII PM 2">XII PM 2</option>
+                          <optgroup label="4. PM (Bisnis Daring/Pemasaran)" className="text-black font-bold">
+                            <option value="X PM 1" className="text-black font-medium">X PM 1</option>
+                            <option value="X PM 2" className="text-black font-medium">X PM 2</option>
+                            <option value="XI PM 1" className="text-black font-medium">XI PM 1</option>
+                            <option value="XI PM 2" className="text-black font-medium">XI PM 2</option>
+                            <option value="XII PM 1" className="text-black font-medium">XII PM 1</option>
+                            <option value="XII PM 2" className="text-black font-medium">XII PM 2</option>
                           </optgroup>
                         </select>
-                        <span className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
+                        <span className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-black">
                           <ChevronRight className="w-4 h-4 rotate-90" />
                         </span>
                       </div>
@@ -1231,11 +1231,11 @@ export default function App() {
                     {/* 2. BAWAH: Dropdown Nama Lengkap Siswa (Terkoneksi ke Pilihan Kelas) */}
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <label className="block text-xs sm:text-sm font-semibold text-slate-700">
-                          Nama Lengkap Siswa <span className="text-pink-500">*</span>
+                        <label className="block text-xs sm:text-sm font-bold text-black">
+                          Nama Lengkap Siswa <span className="text-pink-600">*</span>
                         </label>
                         {kelas && (
-                          <span className="text-[11px] text-purple-700 font-semibold">
+                          <span className="text-[11px] text-purple-700 font-bold">
                             {studentsInSelectedClass.length} Siswa Terdaftar
                           </span>
                         )}
@@ -1244,7 +1244,7 @@ export default function App() {
                       {!isManualStudent ? (
                         <div className="space-y-1.5">
                           <div className="relative">
-                            <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                            <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-black">
                               <User className="w-4 h-4 text-purple-600" />
                             </span>
                             <select
@@ -1262,11 +1262,11 @@ export default function App() {
                               }}
                               className={`w-full pl-10 pr-8 py-2.5 rounded-xl border outline-none text-sm transition appearance-none cursor-pointer ${
                                 !kelas
-                                  ? 'bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed'
-                                  : 'bg-slate-50/50 border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 text-slate-900 font-medium'
+                                  ? 'bg-slate-100 border-slate-300 text-black/60 cursor-not-allowed'
+                                  : 'bg-slate-50/50 border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 text-black font-semibold'
                               }`}
                             >
-                              <option value="">
+                              <option value="" className="text-black font-medium">
                                 {!kelas 
                                   ? '-- Pilih Kelas & Program Keahlian Terlebih Dahulu --' 
                                   : studentsInSelectedClass.length === 0
@@ -1281,7 +1281,7 @@ export default function App() {
                                     key={s.id} 
                                     value={s.nama} 
                                     disabled={isAlreadyVoted}
-                                    className={isAlreadyVoted ? 'text-slate-400 bg-slate-50' : 'text-slate-900'}
+                                    className={isAlreadyVoted ? 'text-black/50 bg-slate-100 line-through' : 'text-black font-medium'}
                                   >
                                     {s.nama} {isAlreadyVoted ? '(✓ Sudah Memilih)' : ''}
                                   </option>
@@ -1293,7 +1293,7 @@ export default function App() {
                                 </option>
                               )}
                             </select>
-                            <span className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
+                            <span className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-black">
                               <ChevronRight className="w-4 h-4 rotate-90" />
                             </span>
                           </div>
@@ -1314,7 +1314,7 @@ export default function App() {
                       ) : (
                         <div className="space-y-1.5 animate-fade-in">
                           <div className="relative">
-                            <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                            <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-black">
                               <User className="w-4 h-4 text-purple-600" />
                             </span>
                             <input
@@ -1325,7 +1325,7 @@ export default function App() {
                                 setDuplicateWarning(null);
                               }}
                               placeholder="Ketik Nama Lengkap Anda sesuai rapor..."
-                              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-purple-400 focus:border-purple-600 focus:ring-2 focus:ring-purple-200 outline-none text-sm transition text-slate-900 bg-white"
+                              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-purple-400 focus:border-purple-600 focus:ring-2 focus:ring-purple-200 outline-none text-sm transition text-black font-semibold placeholder-slate-500 bg-white"
                               autoFocus
                             />
                           </div>
@@ -1382,9 +1382,9 @@ export default function App() {
                 <div className="animate-fade-in space-y-4">
                   {/* Info Siswa yang Login */}
                   <div className="flex items-center justify-between bg-indigo-50/80 px-3.5 py-2 rounded-xl text-xs border border-indigo-200">
-                    <div className="flex items-center gap-2 text-slate-800 min-w-0">
+                    <div className="flex items-center gap-2 text-black min-w-0 font-medium">
                       <UserCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-                      <span className="truncate">Login: <strong className="text-slate-900">{namaSiswa}</strong> ({kelas})</span>
+                      <span className="truncate">Login: <strong className="text-black font-extrabold">{namaSiswa}</strong> ({kelas})</span>
                     </div>
                     <button 
                       type="button"
@@ -1402,7 +1402,7 @@ export default function App() {
                         <Award className="w-5 h-5 text-indigo-600" />
                         <span>Pilih Guru Favorit &amp; Beri Nilai</span>
                       </h2>
-                      <p className="text-xs text-slate-500 mt-0.5">
+                      <p className="text-xs text-black font-medium mt-0.5">
                         Pilih guru favoritmu dari dropdown dan beri rating 5-bintang untuk setiap kriteria.
                       </p>
                     </div>
@@ -1412,14 +1412,14 @@ export default function App() {
                   </div>
 
                   <div>
-                    <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1">
-                      Nama Guru Favorit <span className="text-pink-500">*</span>
+                    <label className="block text-xs sm:text-sm font-bold text-black mb-1">
+                      Nama Guru Favorit <span className="text-pink-600">*</span>
                     </label>
 
                     {!isManualGuru && masterTeachers.length > 0 ? (
                       <div className="space-y-1.5">
                         <div className="relative">
-                          <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                          <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-black">
                             <Award className="w-4 h-4 text-indigo-600" />
                           </span>
                           <select
@@ -1433,17 +1433,17 @@ export default function App() {
                                 setNamaGuru(val);
                               }
                             }}
-                            className="w-full pl-10 pr-8 py-2.5 rounded-xl border border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none text-sm transition text-slate-800 bg-slate-50/50 appearance-none cursor-pointer font-medium"
+                            className="w-full pl-10 pr-8 py-2.5 rounded-xl border border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none text-sm transition text-black bg-slate-50/50 appearance-none cursor-pointer font-semibold"
                           >
-                            <option value="">-- Pilih Guru Favorit ({masterTeachers.length} Guru) --</option>
+                            <option value="" className="text-black font-medium">-- Pilih Guru Favorit ({masterTeachers.length} Guru) --</option>
                             {masterTeachers.map((g) => (
-                              <option key={g} value={g}>{g}</option>
+                              <option key={g} value={g} className="text-black font-medium">{g}</option>
                             ))}
                             <option value="__MANUAL__" className="text-purple-700 font-bold">
                               + Tulis Nama Guru Lainnya (Manual)...
                             </option>
                           </select>
-                          <span className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
+                          <span className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-black">
                             <ChevronRight className="w-4 h-4 rotate-90" />
                           </span>
                         </div>
@@ -1455,11 +1455,11 @@ export default function App() {
                           value={namaGuru}
                           onChange={(e) => setNamaGuru(e.target.value)}
                           placeholder="Ketik Nama Guru Favorit pilihan Anda..."
-                          className="w-full px-4 py-2.5 rounded-xl border border-purple-400 focus:border-purple-600 focus:ring-2 focus:ring-purple-200 outline-none text-sm transition text-slate-800 bg-white"
+                          className="w-full px-4 py-2.5 rounded-xl border border-purple-400 focus:border-purple-600 focus:ring-2 focus:ring-purple-200 outline-none text-sm transition text-black font-semibold placeholder-slate-500 bg-white"
                           autoFocus
                         />
                         {masterTeachers.length === 0 && (
-                          <p className="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-lg">
+                          <p className="text-[11px] text-amber-900 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-lg font-medium">
                             Daftar master guru belum diupload oleh panitia. Silakan ketik nama guru pilihan Anda secara manual.
                           </p>
                         )}
@@ -1471,7 +1471,7 @@ export default function App() {
                                 setIsManualGuru(false);
                                 setNamaGuru('');
                               }}
-                              className="text-xs text-indigo-600 hover:text-indigo-800 font-semibold cursor-pointer underline"
+                              className="text-xs text-indigo-600 hover:text-indigo-800 font-bold cursor-pointer underline"
                             >
                               ← Kembali ke Dropdown Guru
                             </button>
@@ -1483,16 +1483,16 @@ export default function App() {
                     {/* Quick chips from master teachers */}
                     {!isManualGuru && masterTeachers.length > 0 && (
                       <div className="flex flex-wrap items-center gap-1.5 mt-2">
-                        <span className="text-[10px] text-slate-400 font-semibold">Pilihan Cepat:</span>
+                        <span className="text-[10px] text-black font-bold">Pilihan Cepat:</span>
                         {masterTeachers.slice(0, 4).map((g) => (
                           <button
                             key={g}
                             type="button"
                             onClick={() => setNamaGuru(g)}
-                            className={`px-2.5 py-0.5 rounded-lg text-[10px] font-medium transition cursor-pointer ${
+                            className={`px-2.5 py-0.5 rounded-lg text-[10px] transition cursor-pointer ${
                               namaGuru === g
                                 ? 'bg-indigo-600 text-white font-bold'
-                                : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'
+                                : 'bg-slate-100 hover:bg-slate-200 text-black font-bold border border-slate-300'
                             }`}
                           >
                             {g.split('(')[0].trim()}
@@ -1504,7 +1504,7 @@ export default function App() {
 
                   {/* 5 Criteria Stars */}
                   <div className="max-h-[300px] overflow-y-auto pr-1 space-y-2.5 custom-scrollbar">
-                    <p className="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
+                    <p className="text-xs font-bold text-black uppercase tracking-wider flex items-center gap-1.5">
                       <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
                       <span>5 Kriteria Penilaian Guru (Skala 1 - 5 Bintang)</span>
                     </p>
@@ -1514,15 +1514,15 @@ export default function App() {
                       return (
                         <div key={c.key} className="bg-slate-50/90 p-3 rounded-xl border border-slate-200/80 hover:bg-slate-50 transition">
                           <div className="flex justify-between items-center mb-1">
-                            <span className="text-xs sm:text-sm font-bold text-slate-800">
+                            <span className="text-xs sm:text-sm font-bold text-black">
                               <span className="text-indigo-600 mr-1.5 font-mono">{idx + 1}.</span>
                               {c.label.replace(/^\d+\.\s*/, '')}
                             </span>
-                            <span className={`text-[11px] font-medium ${currentVal > 0 ? 'text-amber-500 font-bold' : 'text-slate-400'}`}>
+                            <span className={`text-[11px] font-bold ${currentVal > 0 ? 'text-amber-500' : 'text-black font-medium'}`}>
                               {currentVal > 0 ? RATING_DESCRIPTIONS[currentVal] : 'Belum dinilai'}
                             </span>
                           </div>
-                          <p className="text-[11px] text-slate-500 mb-2">{c.desc}</p>
+                          <p className="text-[11px] text-black font-medium mb-2">{c.desc}</p>
                           <div className="flex items-center gap-1.5">
                             {[1, 2, 3, 4, 5].map((star) => (
                               <button
@@ -1538,7 +1538,7 @@ export default function App() {
                                 <Star className={`w-5 h-5 sm:w-6 sm:h-6 ${star <= currentVal ? 'fill-amber-400 text-amber-400' : 'text-slate-300'}`} />
                               </button>
                             ))}
-                            <span className="font-mono text-xs font-bold text-slate-700 ml-2 w-4 text-center">
+                            <span className="font-mono text-xs font-bold text-black ml-2 w-4 text-center">
                               {currentVal > 0 ? currentVal : '-'}
                             </span>
                           </div>
@@ -1551,7 +1551,7 @@ export default function App() {
                     <button
                       type="button"
                       onClick={() => setStep(1)}
-                      className="px-4 py-2.5 rounded-xl border border-slate-300 font-semibold text-xs text-slate-600 hover:bg-slate-100 transition duration-150 flex items-center gap-1.5 cursor-pointer"
+                      className="px-4 py-2.5 rounded-xl border border-slate-300 font-bold text-xs text-black hover:bg-slate-100 transition duration-150 flex items-center gap-1.5 cursor-pointer"
                     >
                       <ArrowLeft className="w-4 h-4" />
                       <span>Kembali</span>
@@ -1578,12 +1578,12 @@ export default function App() {
                 <div className="animate-fade-in space-y-4">
                   {/* Info Siswa yang Login */}
                   <div className="flex items-center justify-between bg-purple-50/80 px-3.5 py-2 rounded-xl text-xs border border-purple-200">
-                    <div className="flex items-center gap-2 text-slate-800 min-w-0">
+                    <div className="flex items-center gap-2 text-black min-w-0 font-medium">
                       <UserCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-                      <span className="truncate">Login: <strong className="text-slate-900">{namaSiswa}</strong> ({kelas})</span>
+                      <span className="truncate">Login: <strong className="text-black font-extrabold">{namaSiswa}</strong> ({kelas})</span>
                     </div>
                     <div className="text-right shrink-0">
-                      <span className="text-[10px] text-slate-500">Guru: </span>
+                      <span className="text-[10px] text-black font-bold">Guru: </span>
                       <span className="text-xs font-bold text-indigo-700">{namaGuru.split('(')[0].trim()}</span>
                     </div>
                   </div>
@@ -1594,7 +1594,7 @@ export default function App() {
                         <HeartHandshake className="w-5 h-5 text-purple-600" />
                         <span>Pilih Staf TU Favorit &amp; Beri Nilai</span>
                       </h2>
-                      <p className="text-xs text-slate-500 mt-0.5">
+                      <p className="text-xs text-black font-medium mt-0.5">
                         Pilih staf Tata Usaha terbaik pilihanmu dari dropdown dan beri rating 5-bintang.
                       </p>
                     </div>
@@ -1604,14 +1604,14 @@ export default function App() {
                   </div>
 
                   <div>
-                    <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1">
-                      Nama Staf TU Favorit <span className="text-pink-500">*</span>
+                    <label className="block text-xs sm:text-sm font-bold text-black mb-1">
+                      Nama Staf TU Favorit <span className="text-pink-600">*</span>
                     </label>
 
                     {!isManualTU && masterStaff.length > 0 ? (
                       <div className="space-y-1.5">
                         <div className="relative">
-                          <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                          <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-black">
                             <HeartHandshake className="w-4 h-4 text-purple-600" />
                           </span>
                           <select
@@ -1625,17 +1625,17 @@ export default function App() {
                                 setNamaTU(val);
                               }
                             }}
-                            className="w-full pl-10 pr-8 py-2.5 rounded-xl border border-slate-300 focus:border-purple-600 focus:ring-2 focus:ring-purple-200 outline-none text-sm transition text-slate-800 bg-slate-50/50 appearance-none cursor-pointer font-medium"
+                            className="w-full pl-10 pr-8 py-2.5 rounded-xl border border-slate-300 focus:border-purple-600 focus:ring-2 focus:ring-purple-200 outline-none text-sm transition text-black bg-slate-50/50 appearance-none cursor-pointer font-semibold"
                           >
-                            <option value="">-- Pilih Staf TU Favorit ({masterStaff.length} Staf TU) --</option>
+                            <option value="" className="text-black font-medium">-- Pilih Staf TU Favorit ({masterStaff.length} Staf TU) --</option>
                             {masterStaff.map((t) => (
-                              <option key={t} value={t}>{t}</option>
+                              <option key={t} value={t} className="text-black font-medium">{t}</option>
                             ))}
                             <option value="__MANUAL__" className="text-purple-700 font-bold">
                               + Tulis Nama Staf TU Lainnya (Manual)...
                             </option>
                           </select>
-                          <span className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
+                          <span className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-black">
                             <ChevronRight className="w-4 h-4 rotate-90" />
                           </span>
                         </div>
@@ -1647,11 +1647,11 @@ export default function App() {
                           value={namaTU}
                           onChange={(e) => setNamaTU(e.target.value)}
                           placeholder="Ketik Nama Staf TU Favorit pilihan Anda..."
-                          className="w-full px-4 py-2.5 rounded-xl border border-purple-400 focus:border-purple-600 focus:ring-2 focus:ring-purple-200 outline-none text-sm transition text-slate-800 bg-white"
+                          className="w-full px-4 py-2.5 rounded-xl border border-purple-400 focus:border-purple-600 focus:ring-2 focus:ring-purple-200 outline-none text-sm transition text-black font-semibold placeholder-slate-500 bg-white"
                           autoFocus
                         />
                         {masterStaff.length === 0 && (
-                          <p className="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-lg">
+                          <p className="text-[11px] text-amber-900 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-lg font-medium">
                             Daftar master staf TU belum diupload oleh panitia. Silakan ketik nama staf TU pilihan Anda secara manual.
                           </p>
                         )}
@@ -1663,7 +1663,7 @@ export default function App() {
                                 setIsManualTU(false);
                                 setNamaTU('');
                               }}
-                              className="text-xs text-purple-600 hover:text-purple-800 font-semibold cursor-pointer underline"
+                              className="text-xs text-purple-600 hover:text-purple-800 font-bold cursor-pointer underline"
                             >
                               ← Kembali ke Dropdown Staf TU
                             </button>
@@ -1675,16 +1675,16 @@ export default function App() {
                     {/* Quick chips from master staff */}
                     {!isManualTU && masterStaff.length > 0 && (
                       <div className="flex flex-wrap items-center gap-1.5 mt-2">
-                        <span className="text-[10px] text-slate-400 font-semibold">Pilihan Cepat:</span>
+                        <span className="text-[10px] text-black font-bold">Pilihan Cepat:</span>
                         {masterStaff.slice(0, 4).map((t) => (
                           <button
                             key={t}
                             type="button"
                             onClick={() => setNamaTU(t)}
-                            className={`px-2.5 py-0.5 rounded-lg text-[10px] font-medium transition cursor-pointer ${
+                            className={`px-2.5 py-0.5 rounded-lg text-[10px] transition cursor-pointer ${
                               namaTU === t
                                 ? 'bg-purple-600 text-white font-bold'
-                                : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'
+                                : 'bg-slate-100 hover:bg-slate-200 text-black font-bold border border-slate-300'
                             }`}
                           >
                             {t.split('(')[0].trim()}
@@ -1696,7 +1696,7 @@ export default function App() {
 
                   {/* 5 Criteria Stars for TU */}
                   <div className="max-h-[300px] overflow-y-auto pr-1 space-y-2.5 custom-scrollbar">
-                    <p className="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
+                    <p className="text-xs font-bold text-black uppercase tracking-wider flex items-center gap-1.5">
                       <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
                       <span>5 Kriteria Penilaian Staf Tata Usaha (Skala 1 - 5 Bintang)</span>
                     </p>
@@ -1706,15 +1706,15 @@ export default function App() {
                       return (
                         <div key={c.key} className="bg-slate-50/90 p-3 rounded-xl border border-slate-200/80 hover:bg-slate-50 transition">
                           <div className="flex justify-between items-center mb-1">
-                            <span className="text-xs sm:text-sm font-bold text-slate-800">
+                            <span className="text-xs sm:text-sm font-bold text-black">
                               <span className="text-purple-600 mr-1.5 font-mono">{idx + 1}.</span>
                               {c.label.replace(/^\d+\.\s*/, '')}
                             </span>
-                            <span className={`text-[11px] font-medium ${currentVal > 0 ? 'text-amber-500 font-bold' : 'text-slate-400'}`}>
+                            <span className={`text-[11px] font-bold ${currentVal > 0 ? 'text-amber-500' : 'text-black font-medium'}`}>
                               {currentVal > 0 ? RATING_DESCRIPTIONS[currentVal] : 'Belum dinilai'}
                             </span>
                           </div>
-                          <p className="text-[11px] text-slate-500 mb-2">{c.desc}</p>
+                          <p className="text-[11px] text-black font-medium mb-2">{c.desc}</p>
                           <div className="flex items-center gap-1.5">
                             {[1, 2, 3, 4, 5].map((star) => (
                               <button
@@ -1730,7 +1730,7 @@ export default function App() {
                                 <Star className={`w-5 h-5 sm:w-6 sm:h-6 ${star <= currentVal ? 'fill-amber-400 text-amber-400' : 'text-slate-300'}`} />
                               </button>
                             ))}
-                            <span className="font-mono text-xs font-bold text-slate-700 ml-2 w-4 text-center">
+                            <span className="font-mono text-xs font-bold text-black ml-2 w-4 text-center">
                               {currentVal > 0 ? currentVal : '-'}
                             </span>
                           </div>
@@ -1743,7 +1743,7 @@ export default function App() {
                     <button
                       type="button"
                       onClick={() => setStep(2)}
-                      className="px-4 py-2.5 rounded-xl border border-slate-300 font-semibold text-xs text-slate-600 hover:bg-slate-100 transition duration-150 flex items-center gap-1.5 cursor-pointer"
+                      className="px-4 py-2.5 rounded-xl border border-slate-300 font-bold text-xs text-black hover:bg-slate-100 transition duration-150 flex items-center gap-1.5 cursor-pointer"
                     >
                       <ArrowLeft className="w-4 h-4" />
                       <span>Kembali</span>
@@ -1788,25 +1788,25 @@ export default function App() {
                     <h2 className="text-2xl font-extrabold text-slate-900">
                       Terima Kasih, <span className="text-purple-600">{submittedData.namaSiswa}</span>!
                     </h2>
-                    <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto mt-1 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-black font-medium max-w-md mx-auto mt-1 leading-relaxed">
                       Apresiasi Anda telah dicatat secara permanen di Database SMKS PGRI 1 Kota Sukabumi dalam rangka Hari Guru Nasional 2026.
                     </p>
                   </div>
 
                   <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-left max-w-md mx-auto space-y-3">
                     <div className="flex justify-between items-center pb-2 border-b border-slate-200 text-xs">
-                      <span className="text-slate-500">Rombel Siswa:</span>
-                      <span className="font-bold text-slate-800">{submittedData.kelas}</span>
+                      <span className="text-black font-bold">Rombel Siswa:</span>
+                      <span className="font-bold text-black">{submittedData.kelas}</span>
                     </div>
                     <div className="flex justify-between items-center pb-2 border-b border-slate-200 text-xs">
-                      <span className="text-slate-500">Guru Favorit:</span>
+                      <span className="text-black font-bold">Guru Favorit:</span>
                       <div className="text-right">
                         <span className="font-bold text-indigo-700 block">{submittedData.namaGuru}</span>
                         <span className="text-[11px] text-amber-500 font-mono">Rating: {submittedData.avgGuru} / 5.0</span>
                       </div>
                     </div>
                     <div className="flex justify-between items-center text-xs">
-                      <span className="text-slate-500">Staf TU Favorit:</span>
+                      <span className="text-black font-bold">Staf TU Favorit:</span>
                       <div className="text-right">
                         <span className="font-bold text-purple-700 block">{submittedData.namaTU}</span>
                         <span className="text-[11px] text-amber-500 font-mono">Rating: {submittedData.avgTU} / 5.0</span>
@@ -1832,7 +1832,7 @@ export default function App() {
 
         {/* VIEW 2: MENU ADMIN (TERLINDUNGI PIN) */}
         {currentView === 'admin' && isAdminLoggedIn && (
-          <div className="w-full bg-white/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-2xl border border-white/60 p-5 sm:p-7 space-y-5 animate-fade-in text-slate-800">
+          <div className="w-full bg-white/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-2xl border border-white/60 p-5 sm:p-7 space-y-5 animate-fade-in text-black">
             {/* Admin Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
               <div>
@@ -1844,7 +1844,7 @@ export default function App() {
                   <Trophy className="w-6 h-6 text-amber-500" />
                   <span>Panel Rekapitulasi &amp; Data Master HGN 2026</span>
                 </h2>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-black font-semibold mt-0.5">
                   SMKS PGRI 1 Kota Sukabumi • Real-time Cloud Database Firestore
                 </p>
               </div>
@@ -1853,7 +1853,7 @@ export default function App() {
                 <button
                   type="button"
                   onClick={() => setCurrentView('dashboard')}
-                  className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition flex items-center gap-1.5 border border-slate-200 cursor-pointer"
+                  className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-black text-xs font-bold transition flex items-center gap-1.5 border border-slate-300 cursor-pointer"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span>Kembali ke Polling</span>
@@ -1872,41 +1872,41 @@ export default function App() {
 
             {/* Quick Metrics Bar */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5">
-                <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Total Suara Masuk</p>
-                <p className="text-2xl font-extrabold text-slate-900 font-mono mt-0.5">{firestoreVotes.length}</p>
-                <p className="text-[11px] text-emerald-600 mt-0.5 flex items-center gap-1">
+              <div className="bg-slate-50 border border-slate-300 rounded-xl p-3.5">
+                <p className="text-[11px] font-bold text-black uppercase tracking-wider">Total Suara Masuk</p>
+                <p className="text-2xl font-extrabold text-black font-mono mt-0.5">{firestoreVotes.length}</p>
+                <p className="text-[11px] text-emerald-700 font-bold mt-0.5 flex items-center gap-1">
                   <Check className="w-3 h-3 stroke-[3]" /> Terverifikasi 1 siswa
                 </p>
               </div>
-              <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5">
-                <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Data Siswa Master</p>
+              <div className="bg-slate-50 border border-slate-300 rounded-xl p-3.5">
+                <p className="text-[11px] font-bold text-black uppercase tracking-wider">Data Siswa Master</p>
                 <p className="text-2xl font-extrabold text-indigo-700 font-mono mt-0.5">
-                  {masterStudents.length} <span className="text-xs font-sans font-normal text-slate-500">siswa</span>
+                  {masterStudents.length} <span className="text-xs font-sans font-bold text-black">siswa</span>
                 </p>
-                <p className="text-[11px] text-slate-500 mt-0.5">21 Rombel Terakreditasi</p>
+                <p className="text-[11px] text-black font-semibold mt-0.5">21 Rombel Terakreditasi</p>
               </div>
-              <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5">
-                <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Master Guru</p>
+              <div className="bg-slate-50 border border-slate-300 rounded-xl p-3.5">
+                <p className="text-[11px] font-bold text-black uppercase tracking-wider">Master Guru</p>
                 <p className="text-2xl font-extrabold text-indigo-600 font-mono mt-0.5">{masterTeachers.length}</p>
-                <p className="text-[11px] text-slate-500 mt-0.5">Dewan Guru</p>
+                <p className="text-[11px] text-black font-semibold mt-0.5">Dewan Guru</p>
               </div>
-              <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5">
-                <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Master Staf TU</p>
+              <div className="bg-slate-50 border border-slate-300 rounded-xl p-3.5">
+                <p className="text-[11px] font-bold text-black uppercase tracking-wider">Master Staf TU</p>
                 <p className="text-2xl font-extrabold text-purple-600 font-mono mt-0.5">{masterStaff.length}</p>
-                <p className="text-[11px] text-slate-500 mt-0.5">Staf Tata Usaha</p>
+                <p className="text-[11px] text-black font-semibold mt-0.5">Staf Tata Usaha</p>
               </div>
             </div>
 
             {/* Subtabs Navigation */}
-            <div className="flex border-b border-slate-200 gap-2 overflow-x-auto custom-scrollbar">
+            <div className="flex border-b border-slate-300 gap-2 overflow-x-auto custom-scrollbar">
               <button
                 type="button"
                 onClick={() => setAdminSubTab('top5')}
                 className={`pb-2.5 px-3.5 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer border-b-2 -mb-[2px] whitespace-nowrap ${
                   adminSubTab === 'top5'
-                    ? 'border-indigo-600 text-indigo-600'
-                    : 'border-transparent text-slate-500 hover:text-slate-800'
+                    ? 'border-indigo-600 text-indigo-700 font-extrabold'
+                    : 'border-transparent text-black hover:text-indigo-700'
                 }`}
               >
                 <Trophy className="w-4 h-4 text-amber-500" />
@@ -1917,8 +1917,8 @@ export default function App() {
                 onClick={() => setAdminSubTab('dataMasuk')}
                 className={`pb-2.5 px-3.5 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer border-b-2 -mb-[2px] whitespace-nowrap ${
                   adminSubTab === 'dataMasuk'
-                    ? 'border-indigo-600 text-indigo-600'
-                    : 'border-transparent text-slate-500 hover:text-slate-800'
+                    ? 'border-indigo-600 text-indigo-700 font-extrabold'
+                    : 'border-transparent text-black hover:text-indigo-700'
                 }`}
               >
                 <Database className="w-4 h-4 text-emerald-600" />
@@ -1929,8 +1929,8 @@ export default function App() {
                 onClick={() => setAdminSubTab('uploadMaster')}
                 className={`pb-2.5 px-3.5 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer border-b-2 -mb-[2px] whitespace-nowrap ${
                   adminSubTab === 'uploadMaster'
-                    ? 'border-indigo-600 text-indigo-600'
-                    : 'border-transparent text-slate-500 hover:text-slate-800'
+                    ? 'border-indigo-600 text-indigo-700 font-extrabold'
+                    : 'border-transparent text-black hover:text-indigo-700'
                 }`}
               >
                 <FolderUp className="w-4 h-4 text-purple-600" />
@@ -1950,14 +1950,14 @@ export default function App() {
             {adminSubTab === 'top5' && (
               <div className="space-y-4">
                 {/* Switcher Kategori: Guru vs Staf TU */}
-                <div className="flex rounded-xl bg-slate-100 p-1 text-xs font-bold max-w-xs mx-auto">
+                <div className="flex rounded-xl bg-slate-100 p-1 text-xs font-bold max-w-xs mx-auto border border-slate-300">
                   <button
                     type="button"
                     onClick={() => setLeaderboardCategory('guru')}
-                    className={`flex-1 py-2 rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                    className={`flex-1 py-2 rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer font-bold ${
                       leaderboardCategory === 'guru'
                         ? 'bg-white text-indigo-700 shadow-xs'
-                        : 'text-slate-600 hover:text-slate-900'
+                        : 'text-black hover:text-indigo-700'
                     }`}
                   >
                     <Award className="w-3.5 h-3.5" />
@@ -1966,10 +1966,10 @@ export default function App() {
                   <button
                     type="button"
                     onClick={() => setLeaderboardCategory('tu')}
-                    className={`flex-1 py-2 rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                    className={`flex-1 py-2 rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer font-bold ${
                       leaderboardCategory === 'tu'
                         ? 'bg-white text-purple-700 shadow-xs'
-                        : 'text-slate-600 hover:text-slate-900'
+                        : 'text-black hover:text-purple-700'
                     }`}
                   >
                     <HeartHandshake className="w-3.5 h-3.5" />
@@ -1980,7 +1980,7 @@ export default function App() {
                 {/* Daftar Top 5 Podium */}
                 <div className="space-y-2.5 max-w-xl mx-auto">
                   {(leaderboardCategory === 'guru' ? top5Guru : top5TU).length === 0 ? (
-                    <div className="bg-slate-50 border border-slate-200 rounded-2xl text-center py-10 text-slate-400 text-xs">
+                    <div className="bg-slate-50 border border-slate-300 rounded-2xl text-center py-10 text-black font-semibold text-xs">
                       Belum ada perolehan suara yang masuk untuk {leaderboardCategory === 'guru' ? 'Guru' : 'Staf TU'}.
                     </div>
                   ) : (
@@ -2008,19 +2008,19 @@ export default function App() {
                                 isFirst
                                   ? 'bg-amber-400 text-slate-950 shadow-sm'
                                   : isSecond
-                                  ? 'bg-slate-300 text-slate-800'
+                                  ? 'bg-slate-300 text-black'
                                   : isThird
-                                  ? 'bg-orange-200 text-orange-900'
-                                  : 'bg-slate-100 text-slate-600'
+                                  ? 'bg-orange-200 text-orange-950'
+                                  : 'bg-slate-100 text-black font-bold'
                               }`}
                             >
                               #{idx + 1}
                             </div>
                             <div className="min-w-0">
-                              <h4 className="font-bold text-xs sm:text-sm text-slate-900 truncate">
+                              <h4 className="font-extrabold text-xs sm:text-sm text-black truncate">
                                 {item.nama}
                               </h4>
-                              <div className="flex items-center gap-2 text-[11px] text-slate-500 mt-0.5">
+                              <div className="flex items-center gap-2 text-[11px] text-black font-semibold mt-0.5">
                                 <span className="text-amber-500 font-semibold flex items-center gap-1">
                                   <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
                                   <span className="font-mono">{item.rataRataSkor} / 5.0</span>
@@ -2052,14 +2052,14 @@ export default function App() {
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <Database className="w-4 h-4 text-emerald-600" />
-                    <h3 className="text-sm font-bold text-slate-800">
+                    <h3 className="text-sm font-extrabold text-black">
                       Dokumen Suara Masuk di Cloud Firestore
                     </h3>
                   </div>
                   <div className="flex items-center gap-2 flex-wrap">
                     <button
                       onClick={handleAdminResetTest}
-                      className="px-2.5 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-semibold transition cursor-pointer"
+                      className="px-2.5 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-950 text-xs font-bold transition cursor-pointer"
                     >
                       Reset Hak Suara Tes Lokal
                     </button>
@@ -2067,7 +2067,7 @@ export default function App() {
                       <button
                         type="button"
                         onClick={handleClearAllVotes}
-                        className="px-2.5 py-1 rounded-lg bg-red-100 hover:bg-red-200 text-red-800 text-xs font-bold transition cursor-pointer flex items-center gap-1"
+                        className="px-2.5 py-1 rounded-lg bg-red-100 hover:bg-red-200 text-red-900 text-xs font-bold transition cursor-pointer flex items-center gap-1"
                         title="Hapus dan kosongkan seluruh suara polling di database"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -2078,8 +2078,8 @@ export default function App() {
                 </div>
 
                 {/* Filter Rombel & Program Keahlian */}
-                <div className="flex flex-wrap items-center gap-1.5 py-1 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
-                  <span className="text-[11px] font-bold text-slate-600 mr-1">Program Keahlian:</span>
+                <div className="flex flex-wrap items-center gap-1.5 py-1 bg-slate-50 p-2.5 rounded-xl border border-slate-300">
+                  <span className="text-[11px] font-extrabold text-black mr-1">Program Keahlian:</span>
                   {(['SEMUA', 'TKJ', 'AKL', 'MPLB', 'PM'] as const).map((jur) => {
                     const count = jur === 'SEMUA' 
                       ? firestoreVotes.length 
@@ -2091,12 +2091,12 @@ export default function App() {
                         className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
                           jurusanFilter === jur
                             ? 'bg-indigo-600 text-white shadow-xs'
-                            : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'
+                            : 'bg-white text-black border border-slate-300 hover:bg-slate-100'
                         }`}
                       >
                         <span>{jur}</span>
-                        <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                          jurusanFilter === jur ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
+                        <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                          jurusanFilter === jur ? 'bg-white/20 text-white' : 'bg-slate-200 text-black'
                         }`}>
                           {count}
                         </span>
@@ -2106,10 +2106,10 @@ export default function App() {
                 </div>
 
                 {/* Table Data Masuk */}
-                <div className="border border-slate-200 rounded-xl overflow-hidden bg-white">
+                <div className="border border-slate-300 rounded-xl overflow-hidden bg-white">
                   <div className="overflow-x-auto max-h-[420px] custom-scrollbar">
                     <table className="w-full text-left text-xs border-collapse">
-                      <thead className="bg-slate-100 border-b border-slate-200 text-slate-700 sticky top-0 font-bold z-10">
+                      <thead className="bg-slate-100 border-b border-slate-300 text-black sticky top-0 font-extrabold z-10">
                         <tr>
                           <th className="py-2.5 px-3">No</th>
                           <th className="py-2.5 px-3">Nama Siswa</th>
@@ -2121,36 +2121,36 @@ export default function App() {
                           <th className="py-2.5 px-3 text-right">Waktu</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100">
+                      <tbody className="divide-y divide-slate-200">
                         {filteredFirestoreVotes.length === 0 ? (
                           <tr>
-                            <td colSpan={8} className="py-8 text-center text-slate-400">
+                            <td colSpan={8} className="py-8 text-center text-black font-semibold">
                               Belum ada data suara masuk pada kategori ini.
                             </td>
                           </tr>
                         ) : (
                           filteredFirestoreVotes.map((v, idx) => (
                             <tr key={v.id || idx} className="hover:bg-slate-50 transition">
-                              <td className="py-2 px-3 font-mono text-slate-500">{idx + 1}</td>
-                              <td className="py-2 px-3 font-semibold text-slate-900">{v.namaSiswa}</td>
+                              <td className="py-2 px-3 font-mono font-bold text-black">{idx + 1}</td>
+                              <td className="py-2 px-3 font-bold text-black">{v.namaSiswa}</td>
                               <td className="py-2 px-3">
-                                <span className="inline-block px-2 py-0.5 rounded-md font-bold text-[11px] bg-slate-100 text-slate-700">
+                                <span className="inline-block px-2 py-0.5 rounded-md font-bold text-[11px] bg-slate-100 text-black border border-slate-300">
                                   {v.kelas}
                                 </span>
                               </td>
-                              <td className="py-2 px-3 font-medium text-indigo-700">{v.namaGuru}</td>
+                              <td className="py-2 px-3 font-bold text-indigo-700">{v.namaGuru}</td>
                               <td className="py-2 px-3 text-center">
-                                <span className="font-mono font-bold text-amber-500 bg-amber-50 px-2 py-0.5 rounded">
+                                <span className="font-mono font-bold text-amber-500 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
                                   ★ {v.rataRataGuru}
                                 </span>
                               </td>
-                              <td className="py-2 px-3 font-medium text-purple-700">{v.namaTU}</td>
+                              <td className="py-2 px-3 font-bold text-purple-700">{v.namaTU}</td>
                               <td className="py-2 px-3 text-center">
-                                <span className="font-mono font-bold text-amber-500 bg-amber-50 px-2 py-0.5 rounded">
+                                <span className="font-mono font-bold text-amber-500 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
                                   ★ {v.rataRataTU}
                                 </span>
                               </td>
-                              <td className="py-2 px-3 text-right text-[11px] text-slate-500 whitespace-nowrap">
+                              <td className="py-2 px-3 text-right text-[11px] text-black font-semibold whitespace-nowrap">
                                 {v.createdAt ? new Date(v.createdAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : '-'}
                               </td>
                             </tr>
@@ -2167,16 +2167,16 @@ export default function App() {
             {adminSubTab === 'uploadMaster' && (
               <div className="space-y-4">
                 {/* Header Sub-section */}
-                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div className="bg-slate-50 border border-slate-300 rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
                   <div>
-                    <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                    <h3 className="text-sm font-extrabold text-black flex items-center gap-2">
                       <FolderUp className="w-4 h-4 text-indigo-600" />
                       <span>Manajemen Sumber Data Dropdown Aplikasi Polling</span>
                     </h3>
-                    <p className="text-xs text-slate-500 mt-0.5">
+                    <p className="text-xs text-black font-medium mt-0.5">
                       Data ini otomatis digunakan pada pilihan dropdown login siswa, guru favorit, dan staf TU.
                       {masterUpdatedAt && (
-                        <span className="text-purple-700 font-medium ml-1">
+                        <span className="text-purple-700 font-bold ml-1">
                           (Sinkronisasi terakhir: {new Date(masterUpdatedAt).toLocaleString('id-ID')})
                         </span>
                       )}
@@ -2204,7 +2204,7 @@ export default function App() {
                     <button
                       type="button"
                       onClick={handleClearAllMaster}
-                      className="px-3 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 text-xs font-semibold transition flex items-center gap-1 border border-red-200 cursor-pointer"
+                      className="px-3 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 text-xs font-bold transition flex items-center gap-1 border border-red-200 cursor-pointer"
                       title="Kosongkan seluruh data master siswa, guru, dan TU di Cloud Database"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -2214,14 +2214,14 @@ export default function App() {
                 </div>
 
                 {/* Sub-selector Kategori Master */}
-                <div className="flex rounded-xl bg-slate-100 p-1 text-xs font-bold max-w-md mx-auto">
+                <div className="flex rounded-xl bg-slate-100 p-1 text-xs font-bold max-w-md mx-auto border border-slate-300">
                   <button
                     type="button"
                     onClick={() => setUploadCategory('siswa')}
-                    className={`flex-1 py-2 rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                    className={`flex-1 py-2 rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer font-bold ${
                       uploadCategory === 'siswa'
                         ? 'bg-white text-indigo-700 shadow-xs'
-                        : 'text-slate-600 hover:text-slate-900'
+                        : 'text-black hover:text-indigo-700'
                     }`}
                   >
                     <User className="w-3.5 h-3.5" />
@@ -2230,10 +2230,10 @@ export default function App() {
                   <button
                     type="button"
                     onClick={() => setUploadCategory('guru')}
-                    className={`flex-1 py-2 rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                    className={`flex-1 py-2 rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer font-bold ${
                       uploadCategory === 'guru'
                         ? 'bg-white text-indigo-700 shadow-xs'
-                        : 'text-slate-600 hover:text-slate-900'
+                        : 'text-black hover:text-indigo-700'
                     }`}
                   >
                     <Award className="w-3.5 h-3.5" />
@@ -2242,10 +2242,10 @@ export default function App() {
                   <button
                     type="button"
                     onClick={() => setUploadCategory('tu')}
-                    className={`flex-1 py-2 rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                    className={`flex-1 py-2 rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer font-bold ${
                       uploadCategory === 'tu'
                         ? 'bg-white text-purple-700 shadow-xs'
-                        : 'text-slate-600 hover:text-slate-900'
+                        : 'text-black hover:text-purple-700'
                     }`}
                   >
                     <HeartHandshake className="w-3.5 h-3.5" />
@@ -2259,11 +2259,11 @@ export default function App() {
                     {/* Action Upload Controls */}
                     <div className="bg-indigo-50/50 border border-indigo-100 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3">
                       <div>
-                        <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                        <h4 className="text-xs sm:text-sm font-extrabold text-black flex items-center gap-1.5">
                           <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
                           <span>Upload File Excel (.xlsx / .xls) Data Siswa</span>
                         </h4>
-                        <p className="text-[11px] text-slate-500 mt-0.5">
+                        <p className="text-[11px] text-black font-medium mt-0.5">
                           Format resmi: <strong>Kelas &amp; Rombel</strong> dan <strong>Nama Lengkap Siswa</strong> (Tersedia format siap cetak 21 rombel).
                         </p>
                       </div>
@@ -2296,26 +2296,26 @@ export default function App() {
                         <button
                           type="button"
                           onClick={() => setShowPasteModal(true)}
-                          className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-600 font-semibold text-xs transition flex items-center gap-1 cursor-pointer"
+                          className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-black font-bold text-xs transition flex items-center gap-1 cursor-pointer"
                         >
-                          <FileText className="w-3 h-3 text-slate-500" />
+                          <FileText className="w-3 h-3 text-black" />
                           <span>Tempel Teks</span>
                         </button>
                       </div>
                     </div>
 
                     {/* Single Student Manual Add Form */}
-                    <form onSubmit={handleAddSingleStudent} className="bg-white border border-slate-200 rounded-xl p-3 flex flex-wrap items-center gap-2.5">
-                      <span className="text-xs font-bold text-slate-700 flex items-center gap-1 shrink-0">
+                    <form onSubmit={handleAddSingleStudent} className="bg-white border border-slate-300 rounded-xl p-3 flex flex-wrap items-center gap-2.5">
+                      <span className="text-xs font-bold text-black flex items-center gap-1 shrink-0">
                         <Plus className="w-3.5 h-3.5 text-indigo-600" /> Tambah 1 Siswa:
                       </span>
                       <select
                         value={singleStudentKelas}
                         onChange={(e) => setSingleStudentKelas(e.target.value)}
-                        className="px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs text-slate-800 bg-slate-50 outline-none"
+                        className="px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs text-black font-bold bg-slate-50 outline-none"
                       >
                         {ALL_ROMBEL_LIST.map((r) => (
-                          <option key={r} value={r}>{r}</option>
+                          <option key={r} value={r} className="text-black font-medium">{r}</option>
                         ))}
                       </select>
                       <input
@@ -2323,7 +2323,7 @@ export default function App() {
                         placeholder="Nama Lengkap Siswa..."
                         value={singleStudentNama}
                         onChange={(e) => setSingleStudentNama(e.target.value)}
-                        className="flex-1 min-w-[180px] px-3 py-1.5 rounded-lg border border-slate-300 text-xs text-slate-800 outline-none"
+                        className="flex-1 min-w-[180px] px-3 py-1.5 rounded-lg border border-slate-300 text-xs text-black font-medium placeholder-slate-500 outline-none"
                       />
                       <button
                         type="submit"
@@ -2338,39 +2338,39 @@ export default function App() {
                     <div className="space-y-2">
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <div className="flex items-center gap-2">
-                          <Filter className="w-3.5 h-3.5 text-slate-400" />
+                          <Filter className="w-3.5 h-3.5 text-black" />
                           <select
                             value={studentFilterClass}
                             onChange={(e) => setStudentFilterClass(e.target.value)}
-                            className="px-2.5 py-1 rounded-lg border border-slate-300 text-xs text-slate-800 font-semibold bg-white"
+                            className="px-2.5 py-1 rounded-lg border border-slate-300 text-xs text-black font-bold bg-white"
                           >
-                            <option value="SEMUA">Semua Rombel ({masterStudents.length})</option>
+                            <option value="SEMUA" className="text-black font-medium">Semua Rombel ({masterStudents.length})</option>
                             {ALL_ROMBEL_LIST.map((r) => {
                               const count = masterStudents.filter(s => s.kelas === r).length;
                               return (
-                                <option key={r} value={r}>{r} ({count} siswa)</option>
+                                <option key={r} value={r} className="text-black font-medium">{r} ({count} siswa)</option>
                               );
                             })}
                           </select>
                         </div>
 
                         <div className="relative">
-                          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
+                          <Search className="w-3.5 h-3.5 text-black absolute left-2.5 top-2.5" />
                           <input
                             type="text"
                             placeholder="Cari nama siswa..."
                             value={studentSearch}
                             onChange={(e) => setStudentSearch(e.target.value)}
-                            className="pl-8 pr-3 py-1.5 rounded-lg border border-slate-300 text-xs text-slate-800 outline-none w-48 sm:w-64"
+                            className="pl-8 pr-3 py-1.5 rounded-lg border border-slate-300 text-xs text-black font-medium placeholder-slate-500 outline-none w-48 sm:w-64"
                           />
                         </div>
                       </div>
 
                       {/* Students List Table */}
-                      <div className="border border-slate-200 rounded-xl overflow-hidden bg-white">
+                      <div className="border border-slate-300 rounded-xl overflow-hidden bg-white">
                         <div className="overflow-y-auto max-h-[350px] custom-scrollbar">
                           <table className="w-full text-left text-xs border-collapse">
-                            <thead className="bg-slate-100 border-b border-slate-200 text-slate-700 sticky top-0 font-bold z-10">
+                            <thead className="bg-slate-100 border-b border-slate-300 text-black sticky top-0 font-extrabold z-10">
                               <tr>
                                 <th className="py-2 px-3 w-12">No</th>
                                 <th className="py-2 px-3">Nama Lengkap Siswa</th>
@@ -2379,10 +2379,10 @@ export default function App() {
                                 <th className="py-2 px-3 text-right">Aksi</th>
                               </tr>
                             </thead>
-                            <tbody className="divide-y divide-slate-100">
+                            <tbody className="divide-y divide-slate-200">
                               {adminFilteredStudents.length === 0 ? (
                                 <tr>
-                                  <td colSpan={5} className="py-6 text-center text-slate-400">
+                                  <td colSpan={5} className="py-6 text-center text-black font-semibold">
                                     Tidak ada data siswa yang cocok dengan filter.
                                   </td>
                                 </tr>
@@ -2392,10 +2392,10 @@ export default function App() {
                                   const hasVoted = firestoreVotes.some(v => v.id === docId);
                                   return (
                                     <tr key={s.id} className="hover:bg-slate-50 transition">
-                                      <td className="py-1.5 px-3 font-mono text-slate-400">{idx + 1}</td>
-                                      <td className="py-1.5 px-3 font-semibold text-slate-800">{s.nama}</td>
+                                      <td className="py-1.5 px-3 font-mono font-bold text-black">{idx + 1}</td>
+                                      <td className="py-1.5 px-3 font-bold text-black">{s.nama}</td>
                                       <td className="py-1.5 px-3">
-                                        <span className="inline-block px-2 py-0.5 rounded font-mono text-[11px] bg-indigo-50 text-indigo-700 font-bold border border-indigo-100">
+                                        <span className="inline-block px-2 py-0.5 rounded font-mono text-[11px] bg-indigo-50 text-indigo-700 font-bold border border-indigo-200">
                                           {s.kelas}
                                         </span>
                                       </td>
@@ -2405,7 +2405,7 @@ export default function App() {
                                             <Check className="w-3 h-3 stroke-[3]" /> Sudah Memilih
                                           </span>
                                         ) : (
-                                          <span className="text-[10px] text-slate-400 font-medium">
+                                          <span className="text-[10px] text-black font-bold">
                                             Belum Memilih
                                           </span>
                                         )}
@@ -2437,11 +2437,11 @@ export default function App() {
                   <div className="space-y-4 animate-fade-in">
                     <div className="bg-indigo-50/50 border border-indigo-100 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3">
                       <div>
-                        <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                        <h4 className="text-xs sm:text-sm font-extrabold text-black flex items-center gap-1.5">
                           <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
                           <span>Upload File Excel (.xlsx / .xls) Data Guru</span>
                         </h4>
-                        <p className="text-[11px] text-slate-500 mt-0.5">
+                        <p className="text-[11px] text-black font-medium mt-0.5">
                           Format resmi: <strong>Nama Lengkap Guru beserta Gelar</strong> dan <strong>Mata Pelajaran</strong> (Tersedia format siap cetak).
                         </p>
                       </div>
@@ -2474,17 +2474,17 @@ export default function App() {
                         <button
                           type="button"
                           onClick={() => setShowPasteModal(true)}
-                          className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-600 font-semibold text-xs transition flex items-center gap-1 cursor-pointer"
+                          className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-black font-bold text-xs transition flex items-center gap-1 cursor-pointer"
                         >
-                          <FileText className="w-3 h-3 text-slate-500" />
+                          <FileText className="w-3 h-3 text-black" />
                           <span>Tempel Teks</span>
                         </button>
                       </div>
                     </div>
 
                     {/* Single Teacher Manual Add */}
-                    <form onSubmit={handleAddSingleTeacher} className="bg-white border border-slate-200 rounded-xl p-3 flex items-center gap-2.5">
-                      <span className="text-xs font-bold text-slate-700 flex items-center gap-1 shrink-0">
+                    <form onSubmit={handleAddSingleTeacher} className="bg-white border border-slate-300 rounded-xl p-3 flex items-center gap-2.5">
+                      <span className="text-xs font-bold text-black flex items-center gap-1 shrink-0">
                         <Plus className="w-3.5 h-3.5 text-indigo-600" /> Tambah 1 Guru:
                       </span>
                       <input
@@ -2492,7 +2492,7 @@ export default function App() {
                         placeholder="Nama Lengkap Guru beserta Gelar..."
                         value={singleTeacherNama}
                         onChange={(e) => setSingleTeacherNama(e.target.value)}
-                        className="flex-1 px-3 py-1.5 rounded-lg border border-slate-300 text-xs text-slate-800 outline-none"
+                        className="flex-1 px-3 py-1.5 rounded-lg border border-slate-300 text-xs text-black font-medium placeholder-slate-500 outline-none"
                       />
                       <button
                         type="submit"
@@ -2504,10 +2504,10 @@ export default function App() {
                     </form>
 
                     {/* Teachers List */}
-                    <div className="border border-slate-200 rounded-xl overflow-hidden bg-white">
+                    <div className="border border-slate-300 rounded-xl overflow-hidden bg-white">
                       <div className="overflow-y-auto max-h-[350px] custom-scrollbar">
                         <table className="w-full text-left text-xs border-collapse">
-                          <thead className="bg-slate-100 border-b border-slate-200 text-slate-700 sticky top-0 font-bold z-10">
+                          <thead className="bg-slate-100 border-b border-slate-300 text-black sticky top-0 font-extrabold z-10">
                             <tr>
                               <th className="py-2 px-3 w-12">No</th>
                               <th className="py-2 px-3">Nama Dewan Guru</th>
@@ -2515,15 +2515,15 @@ export default function App() {
                               <th className="py-2 px-3 text-right">Aksi</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-slate-100">
+                          <tbody className="divide-y divide-slate-200">
                             {masterTeachers.map((t, idx) => {
                               const voteCount = firestoreVotes.filter(v => v.namaGuru.trim().toLowerCase() === t.trim().toLowerCase()).length;
                               return (
                                 <tr key={t} className="hover:bg-slate-50 transition">
-                                  <td className="py-1.5 px-3 font-mono text-slate-400">{idx + 1}</td>
-                                  <td className="py-1.5 px-3 font-semibold text-slate-800">{t}</td>
+                                  <td className="py-1.5 px-3 font-mono font-bold text-black">{idx + 1}</td>
+                                  <td className="py-1.5 px-3 font-bold text-black">{t}</td>
                                   <td className="py-1.5 px-3 text-center">
-                                    <span className="font-mono text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded">
+                                    <span className="font-mono text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">
                                       {voteCount} Suara
                                     </span>
                                   </td>
@@ -2552,11 +2552,11 @@ export default function App() {
                   <div className="space-y-4 animate-fade-in">
                     <div className="bg-purple-50/50 border border-purple-100 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3">
                       <div>
-                        <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                        <h4 className="text-xs sm:text-sm font-extrabold text-black flex items-center gap-1.5">
                           <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
                           <span>Upload File Excel (.xlsx / .xls) Data Staf TU</span>
                         </h4>
-                        <p className="text-[11px] text-slate-500 mt-0.5">
+                        <p className="text-[11px] text-black font-medium mt-0.5">
                           Format resmi: <strong>Nama Lengkap Staf Tata Usaha</strong> dan <strong>Bagian / Unit Pelayanan</strong> (Tersedia format siap cetak).
                         </p>
                       </div>
@@ -2589,17 +2589,17 @@ export default function App() {
                         <button
                           type="button"
                           onClick={() => setShowPasteModal(true)}
-                          className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-600 font-semibold text-xs transition flex items-center gap-1 cursor-pointer"
+                          className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-black font-bold text-xs transition flex items-center gap-1 cursor-pointer"
                         >
-                          <FileText className="w-3 h-3 text-slate-500" />
+                          <FileText className="w-3 h-3 text-black" />
                           <span>Tempel Teks</span>
                         </button>
                       </div>
                     </div>
 
                     {/* Single Staff Manual Add */}
-                    <form onSubmit={handleAddSingleStaff} className="bg-white border border-slate-200 rounded-xl p-3 flex items-center gap-2.5">
-                      <span className="text-xs font-bold text-slate-700 flex items-center gap-1 shrink-0">
+                    <form onSubmit={handleAddSingleStaff} className="bg-white border border-slate-300 rounded-xl p-3 flex items-center gap-2.5">
+                      <span className="text-xs font-bold text-black flex items-center gap-1 shrink-0">
                         <Plus className="w-3.5 h-3.5 text-purple-600" /> Tambah 1 Staf TU:
                       </span>
                       <input
@@ -2607,7 +2607,7 @@ export default function App() {
                         placeholder="Nama Lengkap Staf TU & Bagian Pelayanan..."
                         value={singleStaffNama}
                         onChange={(e) => setSingleStaffNama(e.target.value)}
-                        className="flex-1 px-3 py-1.5 rounded-lg border border-slate-300 text-xs text-slate-800 outline-none"
+                        className="flex-1 px-3 py-1.5 rounded-lg border border-slate-300 text-xs text-black font-medium placeholder-slate-500 outline-none"
                       />
                       <button
                         type="submit"
@@ -2619,10 +2619,10 @@ export default function App() {
                     </form>
 
                     {/* Staff List */}
-                    <div className="border border-slate-200 rounded-xl overflow-hidden bg-white">
+                    <div className="border border-slate-300 rounded-xl overflow-hidden bg-white">
                       <div className="overflow-y-auto max-h-[350px] custom-scrollbar">
                         <table className="w-full text-left text-xs border-collapse">
-                          <thead className="bg-slate-100 border-b border-slate-200 text-slate-700 sticky top-0 font-bold z-10">
+                          <thead className="bg-slate-100 border-b border-slate-300 text-black sticky top-0 font-extrabold z-10">
                             <tr>
                               <th className="py-2 px-3 w-12">No</th>
                               <th className="py-2 px-3">Nama Staf Tata Usaha</th>
@@ -2630,15 +2630,15 @@ export default function App() {
                               <th className="py-2 px-3 text-right">Aksi</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-slate-100">
+                          <tbody className="divide-y divide-slate-200">
                             {masterStaff.map((s, idx) => {
                               const voteCount = firestoreVotes.filter(v => v.namaTU.trim().toLowerCase() === s.trim().toLowerCase()).length;
                               return (
                                 <tr key={s} className="hover:bg-slate-50 transition">
-                                  <td className="py-1.5 px-3 font-mono text-slate-400">{idx + 1}</td>
-                                  <td className="py-1.5 px-3 font-semibold text-slate-800">{s}</td>
+                                  <td className="py-1.5 px-3 font-mono font-bold text-black">{idx + 1}</td>
+                                  <td className="py-1.5 px-3 font-bold text-black">{s}</td>
                                   <td className="py-1.5 px-3 text-center">
-                                    <span className="font-mono text-xs font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded">
+                                    <span className="font-mono text-xs font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded border border-purple-200">
                                       {voteCount} Suara
                                     </span>
                                   </td>
@@ -2670,22 +2670,22 @@ export default function App() {
       {/* Modal Tempel / Paste Teks CSV */}
       {showPasteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-fade-in">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-5 shadow-2xl border border-slate-200 space-y-3">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-              <h3 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-5 shadow-2xl border border-slate-300 space-y-3">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+              <h3 className="text-sm font-extrabold text-black flex items-center gap-1.5">
                 <FileText className="w-4 h-4 text-indigo-600" />
                 <span>Tempel Data {uploadCategory === 'siswa' ? 'Siswa' : uploadCategory === 'guru' ? 'Guru' : 'Staf TU'}</span>
               </h3>
               <button
                 type="button"
                 onClick={() => setShowPasteModal(false)}
-                className="text-slate-400 hover:text-slate-700 text-sm font-bold cursor-pointer"
+                className="text-black hover:text-slate-700 text-sm font-bold cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            <p className="text-xs text-slate-500 leading-relaxed">
+            <p className="text-xs text-black font-medium leading-relaxed">
               {uploadCategory === 'siswa'
                 ? 'Salin dari Excel lalu tempel di sini. Format kolom: Kelas, Nama Siswa (Contoh: X TKJ 1, Aditya Pratama).'
                 : 'Salin dari Excel atau daftar nama, 1 nama per baris.'}
@@ -2702,14 +2702,14 @@ export default function App() {
                   ? 'Drs. H. Mulyadi, M.Pd.\nSiti Nurjanah, S.Kom.\nBudi Santoso, S.Kom.'
                   : 'Pak Hendra Permana\nIbu Yanti Maryati\nPak Dedi Mulyadi'
               }
-              className="w-full p-3 rounded-xl border border-slate-300 font-mono text-xs text-slate-800 outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200"
+              className="w-full p-3 rounded-xl border border-slate-300 font-mono text-xs text-black font-semibold placeholder-slate-500 outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200"
             />
 
             <div className="flex items-center justify-end gap-2 pt-2">
               <button
                 type="button"
                 onClick={() => setShowPasteModal(false)}
-                className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition cursor-pointer"
+                className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-black font-bold text-xs transition cursor-pointer border border-slate-300"
               >
                 Batal
               </button>
@@ -2729,14 +2729,14 @@ export default function App() {
       {/* Modal Login Admin (PIN) */}
       {showAdminPinModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-fade-in">
-          <div className="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl border border-slate-200 relative text-slate-800">
+          <div className="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl border border-slate-300 relative text-black">
             <button
               onClick={() => {
                 setShowAdminPinModal(false);
                 setAdminPinError(null);
                 setAdminPinInput('');
               }}
-              className="absolute top-3.5 right-3.5 text-slate-400 hover:text-slate-700 text-sm font-bold cursor-pointer"
+              className="absolute top-3.5 right-3.5 text-black hover:text-slate-700 text-sm font-bold cursor-pointer"
             >
               ✕
             </button>
@@ -2745,15 +2745,15 @@ export default function App() {
               <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center mx-auto mb-2">
                 <Lock className="w-5 h-5" />
               </div>
-              <h3 className="text-base font-bold text-slate-900">Autentikasi Menu Admin</h3>
-              <p className="text-xs text-slate-500">
+              <h3 className="text-base font-extrabold text-black">Autentikasi Menu Admin</h3>
+              <p className="text-xs text-black font-medium">
                 Masukkan PIN Panitia / Guru untuk mengakses 5 Besar, Rekap Suara, dan Upload Data Master.
               </p>
             </div>
 
             <form onSubmit={handleAdminLogin} className="space-y-3.5">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1 text-center">
+                <label className="block text-xs font-bold text-black mb-1 text-center">
                   PIN Keamanan Admin
                 </label>
                 <input
@@ -2764,11 +2764,11 @@ export default function App() {
                     setAdminPinError(null);
                   }}
                   placeholder="PIN Default: admin2026"
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none text-sm text-center tracking-widest font-mono text-slate-900 placeholder-slate-400"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none text-sm text-center tracking-widest font-mono text-black font-bold placeholder-slate-500"
                   autoFocus
                 />
                 {adminPinError && (
-                  <p className="text-xs text-pink-600 font-semibold mt-1 text-center">
+                  <p className="text-xs text-pink-600 font-bold mt-1 text-center">
                     {adminPinError}
                   </p>
                 )}
@@ -2778,7 +2778,7 @@ export default function App() {
                 <button
                   type="button"
                   onClick={() => setShowAdminPinModal(false)}
-                  className="flex-1 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition cursor-pointer"
+                  className="flex-1 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-black font-bold text-xs transition cursor-pointer border border-slate-300"
                 >
                   Batal
                 </button>
