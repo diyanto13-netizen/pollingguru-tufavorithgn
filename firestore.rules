@@ -26,8 +26,22 @@ service cloud.firestore {
                     && request.resource.data.namaTU is string
                     && request.resource.data.namaTU.size() >= 2;
 
-      // Suara yang sudah masuk permanen (tidak dapat diubah atau dihapus)
-      allow update, delete: if false;
+      // Izinkan admin/pengguna menghapus/mereset data suara polling
+      allow update: if false;
+      allow delete: if true;
+    }
+
+    // Koleksi Data Master: Siswa, Guru, dan Staf TU untuk dropdown pilihan
+    match /master_data/{docId} {
+      // Pembacaan publik agar siswa dapat memilih nama mereka, guru, dan TU dari dropdown
+      allow read: if true;
+
+      // Penyimpanan data master oleh admin
+      allow create, update: if request.resource.data.students is list
+                            && request.resource.data.teachers is list
+                            && request.resource.data.staff is list;
+
+      allow delete: if true;
     }
   }
 }

@@ -47,12 +47,40 @@
         }
       },
       "required": ["namaSiswa", "kelas", "namaGuru", "rataRataGuru", "namaTU", "rataRataTU", "createdAt"]
+    },
+    "MasterData": {
+      "title": "MasterData",
+      "description": "Daftar master siswa, guru, dan staf TU SMKS PGRI 1 Kota Sukabumi untuk dropdown polling",
+      "type": "object",
+      "properties": {
+        "students": {
+          "type": "array",
+          "description": "Daftar siswa terdaftar per kelas"
+        },
+        "teachers": {
+          "type": "array",
+          "description": "Daftar guru favorit untuk pilihan dropdown"
+        },
+        "staff": {
+          "type": "array",
+          "description": "Daftar staf TU favorit untuk pilihan dropdown"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Waktu pembaruan data master terakhir"
+        }
+      },
+      "required": ["students", "teachers", "staff"]
     }
   },
   "firestore": {
     "/votes/{voteId}": {
       "schema": "Vote",
       "description": "Koleksi dokumen polling suara siswa SMKS PGRI 1 Kota Sukabumi"
+    },
+    "/master_data/{docId}": {
+      "schema": "MasterData",
+      "description": "Konfigurasi daftar siswa, guru, dan staf TU untuk dropdown pilihan"
     }
   }
 }
