@@ -298,6 +298,27 @@ export default function App() {
   const [singleTeacherNama, setSingleTeacherNama] = useState<string>('');
   const [singleStaffNama, setSingleStaffNama] = useState<string>('');
 
+  // Non-blocking in-app confirmation dialog and notification toast (replaces window.alert / window.confirm)
+  const [confirmDialog, setConfirmDialog] = useState<{
+    title: string;
+    message: string;
+    confirmLabel?: string;
+    isDanger?: boolean;
+    onConfirm: () => void;
+  } | null>(null);
+
+  const [adminToast, setAdminToast] = useState<{
+    type: 'success' | 'error' | 'info';
+    message: string;
+  } | null>(null);
+
+  const triggerToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
+    setAdminToast({ type, message });
+    setTimeout(() => {
+      setAdminToast((prev) => (prev?.message === message ? null : prev));
+    }, 4500);
+  };
+
   const studentFileInputRef = useRef<HTMLInputElement>(null);
   const teacherFileInputRef = useRef<HTMLInputElement>(null);
   const staffFileInputRef = useRef<HTMLInputElement>(null);
@@ -598,28 +619,35 @@ export default function App() {
   };
 
   const handleAdminResetTest = () => {
-    if (confirm('Reset status hak suara pada perangkat ini untuk keperluan uji coba?')) {
-      localStorage.removeItem('smks_pgri1_hgn2026_voted');
-      setHasVotedToken(null);
-      setNamaSiswa('');
-      setKelas('');
-      setIsManualStudent(false);
-      setNamaGuru('');
-      setIsManualGuru(false);
-      setSkorGuru({ keramahan: 0, profesionalisme: 0, empati: 0, keteladanan: 0, inspirasi: 0 });
-      setNamaTU('');
-      setIsManualTU(false);
-      setSkorTU({ keramahan: 0, kecepatan: 0, bantuan: 0, kedisiplinan: 0, auraPositif: 0 });
-      setSubmittedData(null);
-      setDuplicateWarning(null);
-      setStep(1);
-      alert('Status pemilih lokal berhasil direset. Silakan kembali ke formulir polling.');
-    }
+    setConfirmDialog({
+      title: 'Reset Hak Suara Perangkat',
+      message: 'Reset status hak suara pada perangkat ini untuk keperluan uji coba polling? Tindakan ini hanya menghapus memori pemilihan lokal pada browser ini.',
+      confirmLabel: 'Ya, Reset Hak Suara',
+      isDanger: false,
+      onConfirm: () => {
+        localStorage.removeItem('smks_pgri1_hgn2026_voted');
+        setHasVotedToken(null);
+        setNamaSiswa('');
+        setKelas('');
+        setIsManualStudent(false);
+        setNamaGuru('');
+        setIsManualGuru(false);
+        setSkorGuru({ keramahan: 0, profesionalisme: 0, empati: 0, keteladanan: 0, inspirasi: 0 });
+        setNamaTU('');
+        setIsManualTU(false);
+        setSkorTU({ keramahan: 0, kecepatan: 0, bantuan: 0, kedisiplinan: 0, auraPositif: 0 });
+        setSubmittedData(null);
+        setDuplicateWarning(null);
+        setStep(1);
+        triggerToast('Status hak suara lokal pada browser berhasil direset. Silakan lakukan polling uji coba.', 'success');
+        setConfirmDialog(null);
+      }
+    });
   };
 
   const handleExportCSV = () => {
     if (firestoreVotes.length === 0) {
-      alert('Belum ada data suara masuk untuk diunduh.');
+      triggerToast('Belum ada data suara masuk untuk diunduh.', 'info');
       return;
     }
     const headers = [
@@ -681,31 +709,45 @@ export default function App() {
 
   // Clear all Master Data (Students, Teachers, Staff) permanently from Cloud Firestore and UI
   const handleClearAllMaster = async () => {
-    if (confirm('Kosongkan semua data master (Siswa, Guru, TU) di Cloud Database? Semua data yang dihapus tidak akan tampil kembali.')) {
-      await handleSaveMasterToCloud([], [], []);
-      alert('Seluruh data master (Siswa, Guru, TU) telah berhasil dikosongkan.');
-    }
+    setConfirmDialog({
+      title: 'Kosongkan Semua Data Master?',
+      message: 'Apakah Anda yakin ingin mengosongkan semua data master (Siswa, Guru, TU) di Cloud Database? Semua data yang dihapus tidak akan tampil kembali.',
+      confirmLabel: 'Ya, Kosongkan Master Data',
+      isDanger: true,
+      onConfirm: async () => {
+        setConfirmDialog(null);
+        await handleSaveMasterToCloud([], [], []);
+        triggerToast('Seluruh data master (Siswa, Guru, TU) telah berhasil dikosongkan.', 'success');
+      }
+    });
   };
 
   // Clear all Votes from Cloud Firestore permanently
   const handleClearAllVotes = async () => {
-    if (confirm('PERINGATAN: Apakah Anda yakin ingin menghapus SELURUH data suara polling yang tersimpan di Cloud Database? Tindakan ini permanen.')) {
-      setIsSavingMaster(true);
-      try {
-        for (const vote of firestoreVotes) {
-          if (vote.id) {
-            await deleteDoc(doc(db, 'votes', vote.id));
+    setConfirmDialog({
+      title: 'Hapus Seluruh Suara Polling?',
+      message: 'PERINGATAN: Apakah Anda yakin ingin menghapus SELURUH data suara polling yang tersimpan di Cloud Database? Tindakan ini permanen dan tidak dapat dibatalkan.',
+      confirmLabel: 'Ya, Hapus Semua Suara',
+      isDanger: true,
+      onConfirm: async () => {
+        setConfirmDialog(null);
+        setIsSavingMaster(true);
+        try {
+          for (const vote of firestoreVotes) {
+            if (vote.id) {
+              await deleteDoc(doc(db, 'votes', vote.id));
+            }
           }
+          localStorage.removeItem('smks_pgri1_hgn2026_voted');
+          setHasVotedToken(null);
+          triggerToast('Seluruh data suara polling berhasil dihapus dan dikosongkan dari Cloud Firestore.', 'success');
+        } catch (err) {
+          handleFirestoreError(err, OperationType.DELETE, 'votes');
+        } finally {
+          setIsSavingMaster(false);
         }
-        localStorage.removeItem('smks_pgri1_hgn2026_voted');
-        setHasVotedToken(null);
-        alert('Seluruh data suara polling berhasil dihapus dan dikosongkan dari Cloud Firestore.');
-      } catch (err) {
-        handleFirestoreError(err, OperationType.DELETE, 'votes');
-      } finally {
-        setIsSavingMaster(false);
       }
-    }
+    });
   };
 
   // Template CSV Downloaders
@@ -804,9 +846,9 @@ export default function App() {
           }
         });
         await handleSaveMasterToCloud(updated, masterTeachers, masterStaff);
-        alert(`Berhasil menambahkan ${parsedList.length} siswa ke Data Master!`);
+        triggerToast(`Berhasil menambahkan ${parsedList.length} siswa ke Data Master!`, 'success');
       } else {
-        alert('Format teks tidak dikenali. Pastikan berformat: "Kelas,Nama Siswa" (Contoh: X TKJ 1, Aditya Pratama).');
+        triggerToast('Format teks tidak dikenali. Pastikan berformat: "Kelas,Nama Siswa" (Contoh: X TKJ 1, Aditya Pratama).', 'error');
       }
     } else if (type === 'guru') {
       const parsedTeachers: string[] = [];
@@ -822,7 +864,7 @@ export default function App() {
         const set = new Set([...masterTeachers, ...parsedTeachers]);
         const updated = Array.from(set);
         await handleSaveMasterToCloud(masterStudents, updated, masterStaff);
-        alert(`Berhasil menambahkan ${parsedTeachers.length} guru ke Data Master!`);
+        triggerToast(`Berhasil menambahkan ${parsedTeachers.length} guru ke Data Master!`, 'success');
       }
     } else if (type === 'tu') {
       const parsedStaff: string[] = [];
@@ -838,7 +880,7 @@ export default function App() {
         const set = new Set([...masterStaff, ...parsedStaff]);
         const updated = Array.from(set);
         await handleSaveMasterToCloud(masterStudents, masterTeachers, updated);
-        alert(`Berhasil menambahkan ${parsedStaff.length} staf TU ke Data Master!`);
+        triggerToast(`Berhasil menambahkan ${parsedStaff.length} staf TU ke Data Master!`, 'success');
       }
     }
 
@@ -875,19 +917,19 @@ export default function App() {
             }
           });
           await handleSaveMasterToCloud(updated, masterTeachers, masterStaff);
-          alert(`Berhasil mengunggah dan menyimpan ${result.students.length} data siswa dari file Excel!`);
+          triggerToast(`Berhasil mengunggah dan menyimpan ${result.students.length} data siswa dari file Excel!`, 'success');
         } else if (type === 'guru' && result.teachers && result.teachers.length > 0) {
           const set = new Set([...masterTeachers, ...result.teachers]);
           const updated = Array.from(set);
           await handleSaveMasterToCloud(masterStudents, updated, masterStaff);
-          alert(`Berhasil mengunggah dan menyimpan ${result.teachers.length} data guru dari file Excel!`);
+          triggerToast(`Berhasil mengunggah dan menyimpan ${result.teachers.length} data guru dari file Excel!`, 'success');
         } else if (type === 'tu' && result.staff && result.staff.length > 0) {
           const set = new Set([...masterStaff, ...result.staff]);
           const updated = Array.from(set);
           await handleSaveMasterToCloud(masterStudents, masterTeachers, updated);
-          alert(`Berhasil mengunggah dan menyimpan ${result.staff.length} data staf TU dari file Excel!`);
+          triggerToast(`Berhasil mengunggah dan menyimpan ${result.staff.length} data staf TU dari file Excel!`, 'success');
         } else {
-          alert('Tidak ditemukan baris data valid di dalam file Excel. Silakan gunakan format template Excel resmi yang disediakan.');
+          triggerToast('Tidak ditemukan baris data valid di dalam file Excel. Silakan gunakan format template Excel resmi yang disediakan.', 'error');
         }
       } else {
         // Fallback for CSV / TXT
@@ -902,7 +944,7 @@ export default function App() {
       }
     } catch (err) {
       console.error('Error handling upload:', err);
-      alert('Terjadi kesalahan saat memproses file. Pastikan file berformat Excel (.xlsx/.xls) yang valid.');
+      triggerToast('Terjadi kesalahan saat memproses file. Pastikan file berformat Excel (.xlsx/.xls) yang valid.', 'error');
     } finally {
       setIsSavingMaster(false);
       e.target.value = '';
@@ -919,7 +961,7 @@ export default function App() {
            s.nama.toLowerCase() === singleStudentNama.trim().toLowerCase()
     );
     if (exists) {
-      alert(`Siswa "${singleStudentNama}" sudah ada di rombel "${singleStudentKelas}".`);
+      triggerToast(`Siswa "${singleStudentNama}" sudah ada di rombel "${singleStudentKelas}".`, 'error');
       return;
     }
 
@@ -931,15 +973,26 @@ export default function App() {
 
     const updated = [...masterStudents, newStudent];
     await handleSaveMasterToCloud(updated, masterTeachers, masterStaff);
+    triggerToast(`Siswa "${singleStudentNama.trim()}" berhasil ditambahkan.`, 'success');
     setSingleStudentNama('');
   };
 
   // Delete Single Student
   const handleDeleteStudent = async (id: string) => {
-    if (confirm('Hapus siswa ini dari daftar data master?')) {
-      const updated = masterStudents.filter(s => s.id !== id);
-      await handleSaveMasterToCloud(updated, masterTeachers, masterStaff);
-    }
+    const target = masterStudents.find(s => s.id === id);
+    const displayName = target?.nama || 'siswa';
+    setConfirmDialog({
+      title: 'Hapus Data Siswa',
+      message: `Hapus siswa "${displayName}" (${target?.kelas || '-'}) dari daftar data master?`,
+      confirmLabel: 'Ya, Hapus',
+      isDanger: true,
+      onConfirm: async () => {
+        setConfirmDialog(null);
+        const updated = masterStudents.filter(s => s.id !== id);
+        await handleSaveMasterToCloud(updated, masterTeachers, masterStaff);
+        triggerToast(`Siswa "${displayName}" berhasil dihapus.`, 'success');
+      }
+    });
   };
 
   // Add Single Teacher
@@ -947,20 +1000,29 @@ export default function App() {
     e.preventDefault();
     if (!singleTeacherNama.trim()) return;
     if (masterTeachers.some(t => t.toLowerCase() === singleTeacherNama.trim().toLowerCase())) {
-      alert('Nama guru tersebut sudah ada di daftar.');
+      triggerToast('Nama guru tersebut sudah ada di daftar master.', 'error');
       return;
     }
     const updated = [...masterTeachers, singleTeacherNama.trim()];
     await handleSaveMasterToCloud(masterStudents, updated, masterStaff);
+    triggerToast(`Guru "${singleTeacherNama.trim()}" berhasil ditambahkan.`, 'success');
     setSingleTeacherNama('');
   };
 
   // Delete Single Teacher
   const handleDeleteTeacher = async (name: string) => {
-    if (confirm(`Hapus guru "${name}" dari daftar master?`)) {
-      const updated = masterTeachers.filter(t => t !== name);
-      await handleSaveMasterToCloud(masterStudents, updated, masterStaff);
-    }
+    setConfirmDialog({
+      title: 'Hapus Data Guru',
+      message: `Hapus guru "${name}" dari daftar data master?`,
+      confirmLabel: 'Ya, Hapus',
+      isDanger: true,
+      onConfirm: async () => {
+        setConfirmDialog(null);
+        const updated = masterTeachers.filter(t => t !== name);
+        await handleSaveMasterToCloud(masterStudents, updated, masterStaff);
+        triggerToast(`Guru "${name}" berhasil dihapus.`, 'success');
+      }
+    });
   };
 
   // Add Single Staff
@@ -968,20 +1030,29 @@ export default function App() {
     e.preventDefault();
     if (!singleStaffNama.trim()) return;
     if (masterStaff.some(s => s.toLowerCase() === singleStaffNama.trim().toLowerCase())) {
-      alert('Nama staf TU tersebut sudah ada di daftar.');
+      triggerToast('Nama staf TU tersebut sudah ada di daftar master.', 'error');
       return;
     }
     const updated = [...masterStaff, singleStaffNama.trim()];
     await handleSaveMasterToCloud(masterStudents, masterTeachers, updated);
+    triggerToast(`Staf TU "${singleStaffNama.trim()}" berhasil ditambahkan.`, 'success');
     setSingleStaffNama('');
   };
 
   // Delete Single Staff
   const handleDeleteStaff = async (name: string) => {
-    if (confirm(`Hapus staf TU "${name}" dari daftar master?`)) {
-      const updated = masterStaff.filter(s => s !== name);
-      await handleSaveMasterToCloud(masterStudents, masterTeachers, updated);
-    }
+    setConfirmDialog({
+      title: 'Hapus Staf TU',
+      message: `Hapus staf TU "${name}" dari daftar data master?`,
+      confirmLabel: 'Ya, Hapus',
+      isDanger: true,
+      onConfirm: async () => {
+        setConfirmDialog(null);
+        const updated = masterStaff.filter(s => s !== name);
+        await handleSaveMasterToCloud(masterStudents, masterTeachers, updated);
+        triggerToast(`Staf TU "${name}" berhasil dihapus.`, 'success');
+      }
+    });
   };
 
   return (
@@ -2766,6 +2837,81 @@ export default function App() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* In-App Confirmation Modal (Replaces window.confirm) */}
+      {confirmDialog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-fade-in">
+          <div className="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl border border-slate-300 relative text-black">
+            <button
+              onClick={() => setConfirmDialog(null)}
+              className="absolute top-3.5 right-3.5 text-black hover:text-slate-700 text-sm font-bold cursor-pointer"
+            >
+              ✕
+            </button>
+            <div className="text-center space-y-2 mb-4">
+              <div className={`w-11 h-11 rounded-2xl flex items-center justify-center mx-auto ${
+                confirmDialog.isDanger ? 'bg-red-100 text-red-600' : 'bg-amber-100 text-amber-700'
+              }`}>
+                <AlertTriangle className="w-6 h-6" />
+              </div>
+              <h3 className="text-base font-extrabold text-black">{confirmDialog.title}</h3>
+              <p className="text-xs text-black font-medium leading-relaxed">
+                {confirmDialog.message}
+              </p>
+            </div>
+            <div className="flex items-center gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => setConfirmDialog(null)}
+                className="flex-1 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-black font-bold text-xs transition cursor-pointer border border-slate-300"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                onClick={confirmDialog.onConfirm}
+                className={`flex-1 py-2.5 rounded-xl text-white font-bold text-xs transition cursor-pointer shadow-md ${
+                  confirmDialog.isDanger
+                    ? 'bg-red-600 hover:bg-red-700 shadow-red-500/20'
+                    : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/20'
+                }`}
+              >
+                {confirmDialog.confirmLabel || 'Ya, Lanjutkan'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Floating Notification Toast (Replaces window.alert) */}
+      {adminToast && (
+        <div className="fixed bottom-5 right-5 z-50 max-w-md animate-bounce-short">
+          <div className={`p-4 rounded-2xl shadow-2xl border flex items-start gap-3 backdrop-blur-md ${
+            adminToast.type === 'error'
+              ? 'bg-red-50/95 border-red-300 text-red-950'
+              : adminToast.type === 'success'
+              ? 'bg-emerald-50/95 border-emerald-300 text-emerald-950'
+              : 'bg-indigo-50/95 border-indigo-300 text-indigo-950'
+          }`}>
+            {adminToast.type === 'error' ? (
+              <AlertTriangle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+            ) : adminToast.type === 'success' ? (
+              <Check className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5 stroke-[3]" />
+            ) : (
+              <Sparkles className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
+            )}
+            <div className="flex-1 text-xs font-semibold leading-relaxed">
+              {adminToast.message}
+            </div>
+            <button
+              onClick={() => setAdminToast(null)}
+              className="text-black hover:text-slate-700 text-xs font-bold cursor-pointer shrink-0"
+            >
+              ✕
+            </button>
           </div>
         </div>
       )}
