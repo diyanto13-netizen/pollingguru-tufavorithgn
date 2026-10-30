@@ -990,19 +990,15 @@ export default function App() {
       <nav className="bg-slate-900/90 backdrop-blur-md border-b border-white/10 px-4 py-2.5 text-white sticky top-0 z-50 shadow-md">
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 via-pink-500 to-indigo-500 flex items-center justify-center text-white shadow-md font-black text-sm shrink-0">
-              <School className="w-4 h-4" />
-            </div>
+            <img 
+              src="/assets/aistudio/ChatGPT_Image_22_Sep_2026__21.30.02-removebg-preview_31b400c2.png" 
+              alt="Logo SMKS PGRI 1 Kota Sukabumi" 
+              className="w-9 h-9 sm:w-10 sm:h-10 object-contain drop-shadow-md shrink-0" 
+            />
             <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="font-extrabold text-sm sm:text-base tracking-tight text-white uppercase">
-                  SMKS PGRI 1 KOTA SUKABUMI
-                </span>
-                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                  {isFirebaseConnected ? 'Firebase Cloud' : 'Menghubungkan...'}
-                </span>
-              </div>
+              <span className="font-extrabold text-sm sm:text-base tracking-tight text-white uppercase block leading-tight">
+                SMKS PGRI 1 KOTA SUKABUMI
+              </span>
               <p className="text-[11px] text-purple-200 font-medium">
                 {" Polling Guru & Staf TU Favorit-Dalam Rangka HGN tahun 2026"}
               </p>
@@ -1054,7 +1050,14 @@ export default function App() {
           <div className="w-full max-w-xl mx-auto space-y-4">
             
             {/* Header Hero Section */}
-            <div className="text-center text-white space-y-1">
+            <div className="text-center text-white space-y-2">
+              <div className="flex justify-center">
+                <img 
+                  src="/assets/aistudio/ChatGPT_Image_22_Sep_2026__21.30.02-removebg-preview_31b400c2.png" 
+                  alt="Logo SMKS PGRI 1 Kota Sukabumi" 
+                  className="w-20 h-20 sm:w-24 sm:h-24 object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-300" 
+                />
+              </div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-xs font-semibold text-white shadow-sm">
                 <Award className="w-3.5 h-3.5 text-amber-300 fill-amber-300" />
                 <span>HARI GURU NASIONAL 2026</span>
@@ -1793,18 +1796,33 @@ export default function App() {
           <div className="w-full bg-white/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-2xl border border-white/60 p-5 sm:p-7 space-y-5 animate-fade-in text-black">
             {/* Admin Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
-              <div>
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-100 border border-amber-300 text-amber-900 text-xs font-semibold mb-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5 text-amber-700" />
-                  Area Khusus Panitia &amp; Dewan Guru
+              <div className="flex items-start gap-3">
+                <img 
+                  src="/assets/aistudio/ChatGPT_Image_22_Sep_2026__21.30.02-removebg-preview_31b400c2.png" 
+                  alt="Logo SMKS PGRI 1 Kota Sukabumi" 
+                  className="w-12 h-12 sm:w-14 sm:h-14 object-contain shrink-0 drop-shadow-md" 
+                />
+                <div>
+                  <div className="flex items-center gap-2 flex-wrap mb-1.5">
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-100 border border-amber-300 text-amber-900 text-xs font-bold">
+                      <ShieldCheck className="w-3.5 h-3.5 text-amber-700" />
+                      Area Khusus Panitia &amp; Dewan Guru
+                    </div>
+                    {/* Kotak Firebase Cloud Tersimpan di dalam Menu Admin */}
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-xs">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                      <Database className="w-3.5 h-3.5 text-emerald-700" />
+                      {isFirebaseConnected ? 'Firebase Cloud' : 'Menghubungkan...'}
+                    </span>
+                  </div>
+                  <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+                    <Trophy className="w-6 h-6 text-amber-500" />
+                    <span>Panel Rekapitulasi &amp; Data Master HGN 2026</span>
+                  </h2>
+                  <p className="text-xs text-black font-semibold mt-0.5">
+                    SMKS PGRI 1 Kota Sukabumi • Real-time Cloud Database Firestore
+                  </p>
                 </div>
-                <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
-                  <Trophy className="w-6 h-6 text-amber-500" />
-                  <span>Panel Rekapitulasi &amp; Data Master HGN 2026</span>
-                </h2>
-                <p className="text-xs text-black font-semibold mt-0.5">
-                  SMKS PGRI 1 Kota Sukabumi • Real-time Cloud Database Firestore
-                </p>
               </div>
 
               <div className="flex items-center gap-2 flex-wrap">
