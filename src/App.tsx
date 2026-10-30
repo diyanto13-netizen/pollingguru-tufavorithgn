@@ -26,7 +26,13 @@ import {
   LogIn,
   UserCheck,
   UserPlus,
-  RefreshCw
+  RefreshCw,
+  Download,
+  Medal,
+  CheckCircle2,
+  ChevronRight,
+  HeartHandshake,
+  Send
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { 
@@ -526,27 +532,60 @@ export default function App() {
     }
   };
 
+  const handleExportCSV = () => {
+    if (firestoreVotes.length === 0) {
+      alert('Belum ada data suara masuk untuk diunduh.');
+      return;
+    }
+    const headers = [
+      'Waktu Masuk',
+      'Nama Siswa',
+      'Kelas/Rombel',
+      'Guru Pilihan',
+      'Rata-rata Guru',
+      'Staf TU Pilihan',
+      'Rata-rata TU'
+    ];
+    const rows = filteredFirestoreVotes.map((v) => [
+      `"${v.createdAt ? new Date(v.createdAt).toLocaleString('id-ID') : '-'}"`,
+      `"${v.namaSiswa.replace(/"/g, '""')}"`,
+      `"${v.kelas.replace(/"/g, '""')}"`,
+      `"${v.namaGuru.replace(/"/g, '""')}"`,
+      v.rataRataGuru,
+      `"${v.namaTU.replace(/"/g, '""')}"`,
+      v.rataRataTU
+    ]);
+    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `rekap_polling_hgn2026_pgri1_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-700 via-purple-700 to-pink-600 text-slate-800 flex flex-col font-sans">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-700 via-purple-700 to-pink-600 text-slate-800 flex flex-col font-sans relative overflow-x-hidden selection:bg-purple-200 selection:text-purple-900">
       {/* Top Navbar */}
-      <nav className="bg-slate-900/90 backdrop-blur-md border-b border-white/10 px-4 py-2.5 text-white sticky top-0 z-50">
-        <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
+      <nav className="bg-slate-900/90 backdrop-blur-md border-b border-white/10 px-4 py-2.5 text-white sticky top-0 z-50 shadow-md">
+        <div className="max-w-5xl mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 via-pink-500 to-indigo-500 flex items-center justify-center text-white shadow-md font-black text-sm shrink-0">
               <School className="w-4 h-4" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <span className="font-extrabold text-sm sm:text-base tracking-tight text-white">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="font-extrabold text-sm sm:text-base tracking-tight text-white uppercase">
                   SMKS PGRI 1 KOTA SUKABUMI
                 </span>
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/30 text-emerald-300 border border-emerald-400/40">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                  Firebase Cloud
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                  {isFirebaseConnected ? 'Firebase Cloud' : 'Menghubungkan...'}
                 </span>
               </div>
-              <p className="text-[11px] text-slate-300 font-medium">
-                Polling Guru & Staf TU Favorit-Dalam Rangka HGN tahun 2026
+              <p className="text-[11px] text-purple-200 font-medium">
+                {" Polling Guru & Staf TU Favorit-Dalam Rangka HGN tahun 2026"}
               </p>
             </div>
           </div>
@@ -554,13 +593,13 @@ export default function App() {
           {/* Header Action: Discreet Menu Admin Button */}
           <div className="flex items-center gap-2">
             {isAdminLoggedIn ? (
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-2">
                 <button
                   onClick={() => setCurrentView(currentView === 'admin' ? 'dashboard' : 'admin')}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-sm ${
                     currentView === 'admin'
-                      ? 'bg-amber-500 text-slate-950 shadow-md'
-                      : 'bg-white/10 hover:bg-white/20 text-white'
+                      ? 'bg-amber-400 text-slate-950 font-extrabold'
+                      : 'bg-white/15 hover:bg-white/25 text-white border border-white/20'
                   }`}
                 >
                   <Trophy className="w-3.5 h-3.5" />
@@ -569,7 +608,7 @@ export default function App() {
                 <button
                   onClick={handleAdminLogout}
                   title="Keluar dari Menu Admin"
-                  className="p-1.5 rounded-lg bg-red-500/20 hover:bg-red-500/40 text-red-300 transition cursor-pointer"
+                  className="p-1.5 rounded-lg bg-red-500/20 hover:bg-red-500/40 text-red-200 transition cursor-pointer"
                 >
                   <LogOut className="w-4 h-4" />
                 </button>
@@ -577,7 +616,7 @@ export default function App() {
             ) : (
               <button
                 onClick={() => setShowAdminPinModal(true)}
-                className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-semibold text-slate-200 transition flex items-center gap-1.5 border border-white/15 cursor-pointer"
+                className="px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-xs font-semibold text-white transition flex items-center gap-1.5 border border-white/20 cursor-pointer shadow-sm"
                 title="Buka Menu Admin (5 Besar & Data Masuk)"
               >
                 <Lock className="w-3.5 h-3.5 text-amber-300" />
@@ -589,32 +628,74 @@ export default function App() {
       </nav>
 
       {/* Main Container */}
-      <div className="flex-1 py-6 px-3 sm:px-6 flex items-center justify-center">
+      <main className="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 flex flex-col justify-start">
         
         {/* VIEW 1: DASHBOARD UTAMA - HANYA ISI POLLING */}
         {currentView === 'dashboard' && (
-          <div className="w-full max-w-xl mx-auto">
-            {/* Header Brand */}
-            <div className="text-center mb-4 text-white">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-xs sm:text-sm font-semibold tracking-wide text-white mb-2 shadow-sm">
-                <Award className="w-4 h-4 text-amber-300 fill-amber-300" />
+          <div className="w-full max-w-xl mx-auto space-y-4">
+            
+            {/* Header Hero Section */}
+            <div className="text-center text-white space-y-1">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-xs font-semibold text-white shadow-sm">
+                <Award className="w-3.5 h-3.5 text-amber-300 fill-amber-300" />
                 <span>HARI GURU NASIONAL 2026</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight drop-shadow-md">
-                Polling Guru & Staf TU Favorit
+                Polling Guru &amp; Staf TU Favorit
               </h1>
-              <p className="text-sm sm:text-base text-purple-100 font-medium mt-0.5 drop-shadow flex items-center justify-center gap-1.5">
+              <p className="text-xs sm:text-sm text-purple-100 font-medium drop-shadow flex items-center justify-center gap-1.5">
                 <School className="w-4 h-4 text-pink-200" />
                 <span>SMKS PGRI 1 Kota Sukabumi</span>
               </p>
             </div>
 
+            {/* Stepper Wizard Indicator */}
+            {step < 4 && (
+              <div className="bg-white/20 backdrop-blur-md rounded-2xl p-3 border border-white/30 shadow-lg text-white">
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { num: '01', title: 'Login Siswa', stepId: 1, icon: UserCheck },
+                    { num: '02', title: 'Guru Favorit', stepId: 2, icon: Award },
+                    { num: '03', title: 'Staf TU Favorit', stepId: 3, icon: HeartHandshake },
+                  ].map((s) => {
+                    const isDone = step > s.stepId;
+                    const isCurrent = step === s.stepId;
+                    return (
+                      <div
+                        key={s.num}
+                        className={`flex items-center gap-2 p-2 rounded-xl text-xs font-semibold transition ${
+                          isCurrent
+                            ? 'bg-white text-indigo-700 font-extrabold shadow-md'
+                            : isDone
+                            ? 'bg-emerald-500/30 text-emerald-100 border border-emerald-400/40'
+                            : 'bg-white/10 text-white/70 border border-white/15'
+                        }`}
+                      >
+                        <div
+                          className={`w-6 h-6 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 ${
+                            isCurrent
+                              ? 'bg-indigo-600 text-white'
+                              : isDone
+                              ? 'bg-emerald-500 text-white'
+                              : 'bg-white/20 text-white'
+                          }`}
+                        >
+                          {isDone ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : s.num}
+                        </div>
+                        <span className="truncate">{s.title}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* Glassmorphic Container Card - HANYA FORMULIR POLLING */}
-            <div className="bg-white/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-2xl border border-white/60 p-5 sm:p-8 relative overflow-hidden transition-all duration-300">
+            <div className="bg-white/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-2xl border border-white/60 p-5 sm:p-7 relative overflow-hidden transition-all duration-300">
               
               {/* Info bila perangkat sebelumnya pernah dipakai memilih */}
               {hasVotedToken && step === 1 && (
-                <div className="mb-4 p-3.5 rounded-2xl bg-indigo-50/80 border border-indigo-200 text-indigo-950 text-xs flex flex-wrap items-center justify-between gap-2.5">
+                <div className="mb-4 p-3.5 rounded-2xl bg-indigo-50/90 border border-indigo-200 text-indigo-950 text-xs flex flex-wrap items-center justify-between gap-2.5">
                   <div className="flex items-center gap-2">
                     <UserCheck className="w-4 h-4 text-emerald-600 shrink-0" />
                     <span>
@@ -624,81 +705,23 @@ export default function App() {
                   <button
                     type="button"
                     onClick={handleLoginAsNewStudent}
-                    className="px-2.5 py-1 rounded-lg bg-indigo-600 text-white font-bold hover:bg-indigo-700 transition cursor-pointer text-[11px] flex items-center gap-1 shadow-xs"
+                    className="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold transition cursor-pointer text-[11px] flex items-center gap-1 shadow-xs"
                   >
                     <RefreshCw className="w-3 h-3" />
-                    <span>Bersihkan & Login Baru</span>
+                    <span>Login Siswa Baru</span>
                   </button>
                 </div>
               )}
 
+              {/* Peringatan Duplikasi / Hak Suara */}
               {duplicateWarning && (
-                <div className="mb-4 p-3 rounded-xl bg-pink-50 border border-pink-200 text-pink-900 text-xs flex items-start gap-2">
+                <div className="mb-4 p-3.5 rounded-xl bg-pink-50 border border-pink-200 text-pink-900 text-xs flex items-start gap-2.5 animate-fade-in">
                   <AlertTriangle className="w-4 h-4 text-pink-600 shrink-0 mt-0.5" />
                   <div className="flex-1">
                     <span className="font-bold">Peringatan: </span>
-                    <span>{duplicateWarning}</span>
+                    <span className="leading-relaxed">{duplicateWarning}</span>
                   </div>
                   <button onClick={() => setDuplicateWarning(null)} className="text-pink-600 hover:text-pink-900 font-bold text-xs cursor-pointer">✕</button>
-                </div>
-              )}
-
-              {/* Wizard Steps Header (Langkah 1, 2, 3) */}
-              {step < 4 && (
-                <div className="mb-6">
-                  <div className="flex items-center justify-between relative mb-2">
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-slate-200 rounded-full z-0"></div>
-                    <div
-                      className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full z-0 transition-all duration-300"
-                      style={{
-                        width: step === 1 ? '0%' : step === 2 ? '50%' : '100%'
-                      }}
-                    ></div>
-
-                    {/* Step Nodes */}
-                    <div className="relative z-10 flex flex-col items-center">
-                      <div
-                        className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm transition-all ${
-                          step > 1
-                            ? 'bg-emerald-500 text-white shadow-md'
-                            : step === 1
-                            ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md scale-110 ring-4 ring-purple-200'
-                            : 'bg-slate-200 text-slate-500'
-                        }`}
-                      >
-                        {step > 1 ? <Check className="w-4 h-4 stroke-[3]" /> : '1'}
-                      </div>
-                      <span className="text-[11px] font-bold mt-1 text-slate-800">Login Siswa</span>
-                    </div>
-
-                    <div className="relative z-10 flex flex-col items-center">
-                      <div
-                        className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm transition-all ${
-                          step > 2
-                            ? 'bg-emerald-500 text-white shadow-md'
-                            : step === 2
-                            ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md scale-110 ring-4 ring-purple-200'
-                            : 'bg-slate-200 text-slate-500'
-                        }`}
-                      >
-                        {step > 2 ? <Check className="w-4 h-4 stroke-[3]" /> : '2'}
-                      </div>
-                      <span className="text-[11px] font-medium mt-1 text-slate-700">Guru</span>
-                    </div>
-
-                    <div className="relative z-10 flex flex-col items-center">
-                      <div
-                        className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm transition-all ${
-                          step === 3
-                            ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md scale-110 ring-4 ring-purple-200'
-                            : 'bg-slate-200 text-slate-500'
-                        }`}
-                      >
-                        3
-                      </div>
-                      <span className="text-[11px] font-medium mt-1 text-slate-700">Staf TU</span>
-                    </div>
-                  </div>
                 </div>
               )}
 
@@ -720,92 +743,114 @@ export default function App() {
                     </p>
                   </div>
 
-                  <div>
-                    <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1">
-                      Nama Lengkap Siswa <span className="text-pink-500">*</span>
-                    </label>
-                    <div className="relative">
-                      <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
-                        <User className="w-4 h-4" />
-                      </span>
-                      <input
-                        type="text"
-                        value={namaSiswa}
-                        onChange={(e) => {
-                          setNamaSiswa(e.target.value);
-                          setDuplicateWarning(null);
-                        }}
-                        placeholder="Contoh: Muhammad Farhan"
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none text-sm transition text-slate-800 bg-slate-50/50"
-                      />
+                  <div className="space-y-3.5">
+                    {/* Nama Lengkap Siswa */}
+                    <div>
+                      <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1">
+                        Nama Lengkap Siswa <span className="text-pink-500">*</span>
+                      </label>
+                      <div className="relative">
+                        <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                          <User className="w-4 h-4" />
+                        </span>
+                        <input
+                          type="text"
+                          value={namaSiswa}
+                          onChange={(e) => {
+                            setNamaSiswa(e.target.value);
+                            setDuplicateWarning(null);
+                          }}
+                          placeholder="Contoh: Muhammad Farhan"
+                          className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none text-sm transition text-slate-800 bg-slate-50/50"
+                        />
+                      </div>
                     </div>
-                  </div>
 
-                  <div>
-                    <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1">
-                      Kelas & Program Keahlian <span className="text-pink-500">*</span>
-                    </label>
-                    <div className="relative">
-                      <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
-                        <GraduationCap className="w-4 h-4" />
-                      </span>
-                      <select
-                        value={kelas}
-                        onChange={(e) => {
-                          setKelas(e.target.value);
-                          setDuplicateWarning(null);
-                        }}
-                        className="w-full pl-10 pr-8 py-2.5 rounded-xl border border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none text-sm transition text-slate-800 bg-slate-50/50 appearance-none cursor-pointer"
+                    {/* Kelas & Program Keahlian (21 Rombel Resmi) */}
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="block text-xs sm:text-sm font-semibold text-slate-700">
+                          Kelas &amp; Program Keahlian <span className="text-pink-500">*</span>
+                        </label>
+                        <span className="text-[11px] text-slate-400 font-mono">21 Rombel Terakreditasi</span>
+                      </div>
+                      <div className="relative">
+                        <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                          <GraduationCap className="w-4 h-4" />
+                        </span>
+                        <select
+                          value={kelas}
+                          onChange={(e) => {
+                            setKelas(e.target.value);
+                            setDuplicateWarning(null);
+                          }}
+                          className="w-full pl-10 pr-8 py-2.5 rounded-xl border border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none text-sm transition text-slate-800 bg-slate-50/50 appearance-none cursor-pointer"
+                        >
+                          <option value="" disabled>-- Pilih Rombel &amp; Program Keahlian --</option>
+                          <optgroup label="1. TKJ (Teknik Komputer &amp; Jaringan)">
+                            <option value="X TKJ 1">X TKJ 1</option>
+                            <option value="X TKJ 2">X TKJ 2</option>
+                            <option value="XI TKJ 1">XI TKJ 1</option>
+                            <option value="XI TKJ 2">XI TKJ 2</option>
+                            <option value="XII TKJ 1">XII TKJ 1</option>
+                            <option value="XII TKJ 2">XII TKJ 2</option>
+                          </optgroup>
+                          <optgroup label="2. AKL (Akuntansi)">
+                            <option value="X AKL">X AKL</option>
+                            <option value="XI AKL">XI AKL</option>
+                            <option value="XII AKL">XII AKL</option>
+                          </optgroup>
+                          <optgroup label="3. MPLB (Manajemen Perkantoran)">
+                            <option value="X MPLB 1">X MPLB 1</option>
+                            <option value="X MPLB 2">X MPLB 2</option>
+                            <option value="XI MPLB 1">XI MPLB 1</option>
+                            <option value="XI MPLB 2">XI MPLB 2</option>
+                            <option value="XII MPLB 1">XII MPLB 1</option>
+                            <option value="XII MPLB 2">XII MPLB 2</option>
+                          </optgroup>
+                          <optgroup label="4. PM (Bisnis Daring/Pemasaran)">
+                            <option value="X PM 1">X PM 1</option>
+                            <option value="X PM 2">X PM 2</option>
+                            <option value="XI PM 1">XI PM 1</option>
+                            <option value="XI PM 2">XI PM 2</option>
+                            <option value="XII PM 1">XII PM 1</option>
+                            <option value="XII PM 2">XII PM 2</option>
+                          </optgroup>
+                        </select>
+                        <span className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
+                          <ChevronRight className="w-4 h-4 rotate-90" />
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Ketentuan 1 Siswa 1 Suara */}
+                    <div className="bg-indigo-50/80 border border-indigo-200/80 rounded-xl p-3 flex items-start gap-2.5 text-xs text-indigo-900">
+                      <ShieldCheck className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
+                      <div>
+                        <span className="font-bold">Ketentuan 1 Siswa 1 Suara:</span>
+                        <p className="text-[11px] text-indigo-700 mt-0.5 leading-relaxed">
+                          Sistem otomatis memverifikasi hak suara Anda di Cloud Database. Pastikan menggunakan nama lengkap asli.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Tombol Masuk */}
+                    <div className="pt-2">
+                      <button
+                        type="button"
+                        disabled={!isStep1Valid}
+                        onClick={handleStudentLogin}
+                        className={`w-full py-3 rounded-xl font-bold text-sm text-white transition duration-200 shadow-md flex items-center justify-center gap-2 cursor-pointer ${
+                          isStep1Valid
+                            ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:opacity-95 shadow-purple-500/25 active:scale-[0.99]'
+                            : 'bg-slate-300 cursor-not-allowed'
+                        }`}
                       >
-                        <option value="" disabled>-- Pilih Rombel & Program Keahlian --</option>
-                        <optgroup label="1. TKJ (Teknik Komputer & Jaringan)">
-                          <option value="X TKJ 1">X TKJ 1</option>
-                          <option value="X TKJ 2">X TKJ 2</option>
-                          <option value="XI TKJ 1">XI TKJ 1</option>
-                          <option value="XI TKJ 2">XI TKJ 2</option>
-                          <option value="XII TKJ 1">XII TKJ 1</option>
-                          <option value="XII TKJ 2">XII TKJ 2</option>
-                        </optgroup>
-                        <optgroup label="2. AKL (Akuntansi)">
-                          <option value="X AKL">X AKL</option>
-                          <option value="XI AKL">XI AKL</option>
-                          <option value="XII AKL">XII AKL</option>
-                        </optgroup>
-                        <optgroup label="3. MPLB (Manajemen Perkantoran)">
-                          <option value="X MPLB 1">X MPLB 1</option>
-                          <option value="X MPLB 2">X MPLB 2</option>
-                          <option value="XI MPLB 1">XI MPLB 1</option>
-                          <option value="XI MPLB 2">XI MPLB 2</option>
-                          <option value="XII MPLB 1">XII MPLB 1</option>
-                          <option value="XII MPLB 2">XII MPLB 2</option>
-                        </optgroup>
-                        <optgroup label="4. PM (Bisnis Daring/Pemasaran)">
-                          <option value="X PM 1">X PM 1</option>
-                          <option value="X PM 2">X PM 2</option>
-                          <option value="XI PM 1">XI PM 1</option>
-                          <option value="XI PM 2">XI PM 2</option>
-                          <option value="XII PM 1">XII PM 1</option>
-                          <option value="XII PM 2">XII PM 2</option>
-                        </optgroup>
-                      </select>
+                        <LogIn className="w-4 h-4" />
+                        <span>Masuk &amp; Mulai Polling Guru Favorit</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </button>
                     </div>
-                  </div>
-
-                  <div className="pt-3">
-                    <button
-                      type="button"
-                      disabled={!isStep1Valid}
-                      onClick={handleStudentLogin}
-                      className={`w-full py-3 rounded-xl font-bold text-sm text-white transition duration-200 shadow-md flex items-center justify-center gap-2 cursor-pointer ${
-                        isStep1Valid
-                          ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:opacity-95 shadow-purple-500/25'
-                          : 'bg-slate-300 cursor-not-allowed'
-                      }`}
-                    >
-                      <LogIn className="w-4 h-4" />
-                      <span>Masuk / Login Siswa & Mulai Polling</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
                   </div>
                 </div>
               )}
@@ -814,32 +859,34 @@ export default function App() {
               {step === 2 && (
                 <div className="animate-fade-in space-y-4">
                   {/* Info Siswa yang Login */}
-                  <div className="flex items-center justify-between bg-slate-100/90 px-3.5 py-2 rounded-xl text-xs border border-slate-200">
-                    <div className="flex items-center gap-2 text-slate-800">
+                  <div className="flex items-center justify-between bg-indigo-50/80 px-3.5 py-2 rounded-xl text-xs border border-indigo-200">
+                    <div className="flex items-center gap-2 text-slate-800 min-w-0">
                       <UserCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-                      <span>Login: <strong className="text-slate-900">{namaSiswa}</strong> ({kelas})</span>
+                      <span className="truncate">Login: <strong className="text-slate-900">{namaSiswa}</strong> ({kelas})</span>
                     </div>
                     <button 
                       type="button"
                       onClick={() => setStep(1)} 
-                      className="text-purple-600 hover:text-purple-800 font-bold text-[11px] flex items-center gap-1 cursor-pointer"
+                      className="text-purple-600 hover:text-purple-800 font-bold text-[11px] flex items-center gap-1 cursor-pointer shrink-0"
                     >
                       <RefreshCw className="w-3 h-3" />
                       <span>Ganti Siswa</span>
                     </button>
                   </div>
 
-                  <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+                  <div className="border-b border-slate-100 pb-3 flex items-center justify-between flex-wrap gap-2">
                     <div>
                       <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                        <School className="w-5 h-5 text-purple-600" />
-                        <span>Langkah 2: Guru Favorit</span>
+                        <Award className="w-5 h-5 text-indigo-600" />
+                        <span>Pilih Guru Favorit &amp; Beri Nilai</span>
                       </h2>
                       <p className="text-xs text-slate-500 mt-0.5">
                         Beri rating 5-bintang untuk setiap kriteria guru pilihanmu.
                       </p>
                     </div>
-                    <span className="px-2 py-1 rounded bg-purple-100 text-purple-700 text-[10px] font-bold">2/3</span>
+                    <span className="px-2.5 py-1 rounded-full bg-indigo-100 text-indigo-700 text-[10px] font-bold font-mono">
+                      {Object.values(skorGuru).filter(v => v > 0).length}/{CRITERIA_GURU.length} Kriteria Terisi
+                    </span>
                   </div>
 
                   <div>
@@ -855,45 +902,52 @@ export default function App() {
                     />
                     
                     <div className="flex flex-wrap items-center gap-1.5 mt-2">
-                      <span className="text-[10px] text-slate-400 font-semibold">Pilihan:</span>
-                      {DAFTAR_GURU_CONTOH.slice(0, 3).map((g) => (
+                      <span className="text-[10px] text-slate-400 font-semibold">Pilihan Cepat:</span>
+                      {DAFTAR_GURU_CONTOH.slice(0, 4).map((g) => (
                         <button
                           key={g}
                           type="button"
                           onClick={() => setNamaGuru(g)}
-                          className="px-2 py-0.5 bg-purple-50 text-purple-700 border border-purple-200/60 rounded-full text-[10px] hover:bg-purple-100 transition cursor-pointer"
+                          className={`px-2.5 py-0.5 rounded-lg text-[10px] font-medium transition cursor-pointer ${
+                            namaGuru === g
+                              ? 'bg-indigo-600 text-white font-bold'
+                              : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'
+                          }`}
                         >
-                          + {g.split('(')[0].trim()}
+                          {g.split('(')[0].trim()}
                         </button>
                       ))}
                     </div>
                   </div>
 
                   {/* 5 Criteria Stars */}
-                  <div className="max-h-[290px] overflow-y-auto pr-1 space-y-3 custom-scrollbar">
+                  <div className="max-h-[300px] overflow-y-auto pr-1 space-y-2.5 custom-scrollbar">
                     <p className="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
                       <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
-                      <span>5 Kriteria Penilaian Guru</span>
+                      <span>5 Kriteria Penilaian Guru (Skala 1 - 5 Bintang)</span>
                     </p>
 
-                    {CRITERIA_GURU.map((c) => {
+                    {CRITERIA_GURU.map((c, idx) => {
                       const currentVal = skorGuru[c.key];
                       return (
-                        <div key={c.key} className="bg-slate-50/90 p-3 rounded-xl border border-slate-200/80">
+                        <div key={c.key} className="bg-slate-50/90 p-3 rounded-xl border border-slate-200/80 hover:bg-slate-50 transition">
                           <div className="flex justify-between items-center mb-1">
-                            <span className="text-xs sm:text-sm font-bold text-slate-800">{c.label}</span>
+                            <span className="text-xs sm:text-sm font-bold text-slate-800">
+                              <span className="text-indigo-600 mr-1.5 font-mono">{idx + 1}.</span>
+                              {c.label.replace(/^\d+\.\s*/, '')}
+                            </span>
                             <span className={`text-[11px] font-medium ${currentVal > 0 ? 'text-amber-500 font-bold' : 'text-slate-400'}`}>
                               {currentVal > 0 ? RATING_DESCRIPTIONS[currentVal] : 'Belum dinilai'}
                             </span>
                           </div>
                           <p className="text-[11px] text-slate-500 mb-2">{c.desc}</p>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1.5">
                             {[1, 2, 3, 4, 5].map((star) => (
                               <button
                                 key={star}
                                 type="button"
                                 onClick={() => handleRatingChange('guru', c.key, star)}
-                                className={`text-xl sm:text-2xl transition-all duration-150 hover:scale-125 focus:outline-none p-1 cursor-pointer ${
+                                className={`transition-all duration-150 hover:scale-125 focus:outline-none p-1 cursor-pointer ${
                                   star <= currentVal
                                     ? 'text-amber-400 drop-shadow-sm'
                                     : 'text-slate-300 hover:text-amber-300'
@@ -902,17 +956,20 @@ export default function App() {
                                 <Star className={`w-5 h-5 sm:w-6 sm:h-6 ${star <= currentVal ? 'fill-amber-400 text-amber-400' : 'text-slate-300'}`} />
                               </button>
                             ))}
+                            <span className="font-mono text-xs font-bold text-slate-700 ml-2 w-4 text-center">
+                              {currentVal > 0 ? currentVal : '-'}
+                            </span>
                           </div>
                         </div>
                       );
                     })}
                   </div>
 
-                  <div className="pt-3 flex items-center gap-3">
+                  <div className="pt-2 flex items-center gap-3">
                     <button
                       type="button"
                       onClick={() => setStep(1)}
-                      className="px-4 py-3 rounded-xl border border-slate-300 font-semibold text-sm text-slate-600 hover:bg-slate-100 transition duration-150 flex items-center gap-1.5 cursor-pointer"
+                      className="px-4 py-2.5 rounded-xl border border-slate-300 font-semibold text-xs text-slate-600 hover:bg-slate-100 transition duration-150 flex items-center gap-1.5 cursor-pointer"
                     >
                       <ArrowLeft className="w-4 h-4" />
                       <span>Kembali</span>
@@ -921,9 +978,9 @@ export default function App() {
                       type="button"
                       disabled={!isStep2Valid}
                       onClick={() => setStep(3)}
-                      className={`flex-1 py-3 rounded-xl font-bold text-sm text-white transition duration-200 shadow-md flex items-center justify-center gap-2 cursor-pointer ${
+                      className={`flex-1 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-white transition duration-200 shadow-md flex items-center justify-center gap-2 cursor-pointer ${
                         isStep2Valid
-                          ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:opacity-95 shadow-purple-500/25'
+                          ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:opacity-95 shadow-purple-500/25 active:scale-[0.99]'
                           : 'bg-slate-300 cursor-not-allowed'
                       }`}
                     >
@@ -938,32 +995,30 @@ export default function App() {
               {step === 3 && (
                 <div className="animate-fade-in space-y-4">
                   {/* Info Siswa yang Login */}
-                  <div className="flex items-center justify-between bg-slate-100/90 px-3.5 py-2 rounded-xl text-xs border border-slate-200">
-                    <div className="flex items-center gap-2 text-slate-800">
+                  <div className="flex items-center justify-between bg-purple-50/80 px-3.5 py-2 rounded-xl text-xs border border-purple-200">
+                    <div className="flex items-center gap-2 text-slate-800 min-w-0">
                       <UserCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-                      <span>Login: <strong className="text-slate-900">{namaSiswa}</strong> ({kelas})</span>
+                      <span className="truncate">Login: <strong className="text-slate-900">{namaSiswa}</strong> ({kelas})</span>
                     </div>
-                    <button 
-                      type="button"
-                      onClick={() => setStep(1)} 
-                      className="text-purple-600 hover:text-purple-800 font-bold text-[11px] flex items-center gap-1 cursor-pointer"
-                    >
-                      <RefreshCw className="w-3 h-3" />
-                      <span>Ganti Siswa</span>
-                    </button>
+                    <div className="text-right shrink-0">
+                      <span className="text-[10px] text-slate-500">Guru: </span>
+                      <span className="text-xs font-bold text-indigo-700">{namaGuru.split('(')[0].trim()}</span>
+                    </div>
                   </div>
 
-                  <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+                  <div className="border-b border-slate-100 pb-3 flex items-center justify-between flex-wrap gap-2">
                     <div>
                       <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                        <Sparkles className="w-5 h-5 text-pink-600" />
-                        <span>Langkah 3: Staf TU Favorit</span>
+                        <HeartHandshake className="w-5 h-5 text-purple-600" />
+                        <span>Pilih Staf TU Favorit &amp; Beri Nilai</span>
                       </h2>
                       <p className="text-xs text-slate-500 mt-0.5">
                         Nilai pelayanan staf Tata Usaha terbaik pilihanmu.
                       </p>
                     </div>
-                    <span className="px-2 py-1 rounded bg-pink-100 text-pink-700 text-[10px] font-bold">3/3</span>
+                    <span className="px-2.5 py-1 rounded-full bg-purple-100 text-purple-700 text-[10px] font-bold font-mono">
+                      {Object.values(skorTU).filter(v => v > 0).length}/{CRITERIA_TU.length} Kriteria Terisi
+                    </span>
                   </div>
 
                   <div>
@@ -975,49 +1030,56 @@ export default function App() {
                       value={namaTU}
                       onChange={(e) => setNamaTU(e.target.value)}
                       placeholder="Contoh: Ibu Yanti / Pak Hendra"
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 outline-none text-sm transition text-slate-800 bg-slate-50/50"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:border-purple-600 focus:ring-2 focus:ring-purple-200 outline-none text-sm transition text-slate-800 bg-slate-50/50"
                     />
 
                     <div className="flex flex-wrap items-center gap-1.5 mt-2">
-                      <span className="text-[10px] text-slate-400 font-semibold">Pilihan:</span>
-                      {DAFTAR_TU_CONTOH.slice(0, 3).map((t) => (
+                      <span className="text-[10px] text-slate-400 font-semibold">Pilihan Cepat:</span>
+                      {DAFTAR_TU_CONTOH.slice(0, 4).map((t) => (
                         <button
                           key={t}
                           type="button"
                           onClick={() => setNamaTU(t)}
-                          className="px-2 py-0.5 bg-pink-50 text-pink-700 border border-pink-200/60 rounded-full text-[10px] hover:bg-pink-100 transition cursor-pointer"
+                          className={`px-2.5 py-0.5 rounded-lg text-[10px] font-medium transition cursor-pointer ${
+                            namaTU === t
+                              ? 'bg-purple-600 text-white font-bold'
+                              : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'
+                          }`}
                         >
-                          + {t.split('(')[0].trim()}
+                          {t.split('(')[0].trim()}
                         </button>
                       ))}
                     </div>
                   </div>
 
                   {/* 5 Criteria Stars for TU */}
-                  <div className="max-h-[290px] overflow-y-auto pr-1 space-y-3 custom-scrollbar">
+                  <div className="max-h-[300px] overflow-y-auto pr-1 space-y-2.5 custom-scrollbar">
                     <p className="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
                       <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
-                      <span>5 Kriteria Penilaian Staf Tata Usaha</span>
+                      <span>5 Kriteria Penilaian Staf Tata Usaha (Skala 1 - 5 Bintang)</span>
                     </p>
 
-                    {CRITERIA_TU.map((c) => {
+                    {CRITERIA_TU.map((c, idx) => {
                       const currentVal = skorTU[c.key];
                       return (
-                        <div key={c.key} className="bg-slate-50/90 p-3 rounded-xl border border-slate-200/80">
+                        <div key={c.key} className="bg-slate-50/90 p-3 rounded-xl border border-slate-200/80 hover:bg-slate-50 transition">
                           <div className="flex justify-between items-center mb-1">
-                            <span className="text-xs sm:text-sm font-bold text-slate-800">{c.label}</span>
+                            <span className="text-xs sm:text-sm font-bold text-slate-800">
+                              <span className="text-purple-600 mr-1.5 font-mono">{idx + 1}.</span>
+                              {c.label.replace(/^\d+\.\s*/, '')}
+                            </span>
                             <span className={`text-[11px] font-medium ${currentVal > 0 ? 'text-amber-500 font-bold' : 'text-slate-400'}`}>
                               {currentVal > 0 ? RATING_DESCRIPTIONS[currentVal] : 'Belum dinilai'}
                             </span>
                           </div>
                           <p className="text-[11px] text-slate-500 mb-2">{c.desc}</p>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1.5">
                             {[1, 2, 3, 4, 5].map((star) => (
                               <button
                                 key={star}
                                 type="button"
                                 onClick={() => handleRatingChange('tu', c.key, star)}
-                                className={`text-xl sm:text-2xl transition-all duration-150 hover:scale-125 focus:outline-none p-1 cursor-pointer ${
+                                className={`transition-all duration-150 hover:scale-125 focus:outline-none p-1 cursor-pointer ${
                                   star <= currentVal
                                     ? 'text-amber-400 drop-shadow-sm'
                                     : 'text-slate-300 hover:text-amber-300'
@@ -1026,17 +1088,20 @@ export default function App() {
                                 <Star className={`w-5 h-5 sm:w-6 sm:h-6 ${star <= currentVal ? 'fill-amber-400 text-amber-400' : 'text-slate-300'}`} />
                               </button>
                             ))}
+                            <span className="font-mono text-xs font-bold text-slate-700 ml-2 w-4 text-center">
+                              {currentVal > 0 ? currentVal : '-'}
+                            </span>
                           </div>
                         </div>
                       );
                     })}
                   </div>
 
-                  <div className="pt-3 flex items-center gap-3">
+                  <div className="pt-2 flex items-center gap-3">
                     <button
                       type="button"
                       onClick={() => setStep(2)}
-                      className="px-4 py-3 rounded-xl border border-slate-300 font-semibold text-sm text-slate-600 hover:bg-slate-100 transition duration-150 flex items-center gap-1.5 cursor-pointer"
+                      className="px-4 py-2.5 rounded-xl border border-slate-300 font-semibold text-xs text-slate-600 hover:bg-slate-100 transition duration-150 flex items-center gap-1.5 cursor-pointer"
                     >
                       <ArrowLeft className="w-4 h-4" />
                       <span>Kembali</span>
@@ -1045,20 +1110,20 @@ export default function App() {
                       type="button"
                       disabled={!isStep3Valid || isSubmitting}
                       onClick={handleSubmit}
-                      className={`flex-1 py-3 rounded-xl font-bold text-sm text-white transition duration-200 shadow-md flex items-center justify-center gap-2 cursor-pointer ${
+                      className={`flex-1 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-white transition duration-200 shadow-md flex items-center justify-center gap-2 cursor-pointer ${
                         isStep3Valid && !isSubmitting
-                          ? 'bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 hover:opacity-95 shadow-pink-500/25'
+                          ? 'bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 hover:opacity-95 shadow-pink-500/25 active:scale-[0.99]'
                           : 'bg-slate-300 cursor-not-allowed'
                       }`}
                     >
                       {isSubmitting ? (
                         <>
                           <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                          <span>Menyimpan ke Firebase Firestore...</span>
+                          <span>Menyimpan ke Cloud Database...</span>
                         </>
                       ) : (
                         <>
-                          <Database className="w-4 h-4" />
+                          <Send className="w-4 h-4" />
                           <span>Kirim Suara Polling</span>
                         </>
                       )}
@@ -1094,7 +1159,7 @@ export default function App() {
                     </p>
                     <div className="flex justify-between items-center">
                       <span className="text-slate-500">Kelas:</span>
-                      <span className="font-semibold text-slate-800">{submittedData.kelas}</span>
+                      <span className="font-semibold text-slate-800 font-mono">{submittedData.kelas}</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-slate-500">Guru Favorit:</span>
@@ -1124,89 +1189,120 @@ export default function App() {
               )}
 
             </div>
-
-            <div className="text-center mt-5 text-white/80 text-xs">
-              <p>© 2026 SMKS PGRI 1 Kota Sukabumi • Hari Guru Nasional</p>
-            </div>
           </div>
         )}
 
         {/* VIEW 2: PANEL ADMIN - MENU 5 BESAR & DATA MASUK TERSIMPAN DI SINI */}
         {currentView === 'admin' && isAdminLoggedIn && (
-          <div className="w-full max-w-4xl mx-auto bg-white/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl border border-white/60 shadow-2xl p-5 sm:p-7 text-slate-800 animate-fade-in">
+          <div className="w-full bg-white/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl border border-white/60 shadow-2xl p-5 sm:p-7 text-slate-800 space-y-5 animate-fade-in">
             {/* Header Panel Admin */}
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-4 mb-5">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-indigo-600 text-white flex items-center justify-center shadow">
-                  <ShieldCheck className="w-5 h-5" />
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-200 pb-4">
+              <div>
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-100 border border-amber-300 text-amber-900 text-xs font-semibold mb-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-amber-700" />
+                  Area Khusus Panitia &amp; Dewan Guru
                 </div>
-                <div>
-                  <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                    <span>Panel Menu Admin</span>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
-                      Terkunci Khusus Admin
-                    </span>
-                  </h2>
-                  <p className="text-xs text-slate-500">
-                    Memantau hasil 5 besar perolehan suara tertinggi dan rekaman database Firebase.
-                  </p>
-                </div>
+                <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+                  <Trophy className="w-6 h-6 text-amber-500" />
+                  <span>Panel Rekapitulasi Polling HGN 2026</span>
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  SMKS PGRI 1 Kota Sukabumi • Real-time Cloud Database Firestore
+                </p>
               </div>
 
-              {/* Subtabs di Menu Admin: 5 Besar & Data Masuk */}
-              <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl text-xs font-bold">
+              <div className="flex items-center gap-2 flex-wrap">
                 <button
                   type="button"
-                  onClick={() => setAdminSubTab('top5')}
-                  className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer ${
-                    adminSubTab === 'top5'
-                      ? 'bg-white text-indigo-700 shadow-sm'
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
+                  onClick={() => setCurrentView('dashboard')}
+                  className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition flex items-center gap-1.5 border border-slate-200 cursor-pointer"
                 >
-                  <Trophy className="w-3.5 h-3.5 text-amber-500" />
-                  <span>5 Besar (Top 5)</span>
+                  <ArrowLeft className="w-4 h-4" />
+                  <span>Kembali ke Polling</span>
                 </button>
                 <button
                   type="button"
-                  onClick={() => setAdminSubTab('dataMasuk')}
-                  className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer ${
-                    adminSubTab === 'dataMasuk'
-                      ? 'bg-white text-indigo-700 shadow-sm'
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
+                  onClick={handleExportCSV}
+                  className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:opacity-95 text-white text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+                  title="Unduh seluruh suara dalam format CSV untuk Excel"
                 >
-                  <Database className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Data Masuk ({firestoreVotes.length})</span>
+                  <Download className="w-4 h-4" />
+                  <span>Unduh Rekap CSV</span>
                 </button>
               </div>
+            </div>
+
+            {/* Quick Metrics Bar */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5">
+                <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Total Suara Masuk</p>
+                <p className="text-2xl font-extrabold text-slate-900 font-mono mt-0.5">{firestoreVotes.length}</p>
+                <p className="text-[11px] text-emerald-600 mt-0.5 flex items-center gap-1">
+                  <Check className="w-3 h-3 stroke-[3]" /> Terverifikasi 1 siswa
+                </p>
+              </div>
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5">
+                <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Rombel Aktif</p>
+                <p className="text-2xl font-extrabold text-indigo-700 font-mono mt-0.5">
+                  {new Set(firestoreVotes.map((d) => d.kelas)).size} <span className="text-xs font-sans font-normal text-slate-500">/ 21</span>
+                </p>
+                <p className="text-[11px] text-slate-500 mt-0.5">4 Program Keahlian</p>
+              </div>
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5">
+                <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Top Guru Teratas</p>
+                <p className="text-2xl font-extrabold text-indigo-600 font-mono mt-0.5">{top5Guru.length}</p>
+                <p className="text-[11px] text-slate-500 mt-0.5">5 Terpilih</p>
+              </div>
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5">
+                <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Top Staf TU Teratas</p>
+                <p className="text-2xl font-extrabold text-purple-600 font-mono mt-0.5">{top5TU.length}</p>
+                <p className="text-[11px] text-slate-500 mt-0.5">5 Terpilih</p>
+              </div>
+            </div>
+
+            {/* Subtabs Navigation */}
+            <div className="flex border-b border-slate-200 gap-2">
+              <button
+                type="button"
+                onClick={() => setAdminSubTab('top5')}
+                className={`pb-2.5 px-3.5 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer border-b-2 -mb-[2px] ${
+                  adminSubTab === 'top5'
+                    ? 'border-indigo-600 text-indigo-600'
+                    : 'border-transparent text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                <Trophy className="w-4 h-4 text-amber-500" />
+                <span>Peringkat 5 Besar Teratas</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setAdminSubTab('dataMasuk')}
+                className={`pb-2.5 px-3.5 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer border-b-2 -mb-[2px] ${
+                  adminSubTab === 'dataMasuk'
+                    ? 'border-indigo-600 text-indigo-600'
+                    : 'border-transparent text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                <Database className="w-4 h-4 text-emerald-600" />
+                <span>Rekap Dokumen Data Masuk ({firestoreVotes.length})</span>
+              </button>
             </div>
 
             {/* Konten Submenu 1: 5 BESAR (TOP 5) */}
             {adminSubTab === 'top5' && (
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                    <Trophy className="w-4 h-4 text-amber-500" />
-                    <span>Hasil 5 Besar Polling Tertinggi (Guru & Staf TU)</span>
-                  </h3>
-                  <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
-                    Live Real-Time
-                  </span>
-                </div>
-
-                {/* Tab Kategori Guru vs TU */}
-                <div className="flex rounded-xl bg-slate-100 p-1 text-xs font-bold max-w-md mx-auto">
+                {/* Switcher Kategori: Guru vs Staf TU */}
+                <div className="flex rounded-xl bg-slate-100 p-1 text-xs font-bold max-w-xs mx-auto">
                   <button
                     type="button"
                     onClick={() => setLeaderboardCategory('guru')}
                     className={`flex-1 py-2 rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer ${
                       leaderboardCategory === 'guru'
-                        ? 'bg-white text-indigo-600 shadow-sm'
+                        ? 'bg-white text-indigo-700 shadow-xs'
                         : 'text-slate-600 hover:text-slate-900'
                     }`}
                   >
-                    <School className="w-3.5 h-3.5" />
+                    <Award className="w-3.5 h-3.5" />
                     <span>5 Besar Guru</span>
                   </button>
                   <button
@@ -1214,47 +1310,62 @@ export default function App() {
                     onClick={() => setLeaderboardCategory('tu')}
                     className={`flex-1 py-2 rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer ${
                       leaderboardCategory === 'tu'
-                        ? 'bg-white text-pink-600 shadow-sm'
+                        ? 'bg-white text-purple-700 shadow-xs'
                         : 'text-slate-600 hover:text-slate-900'
                     }`}
                   >
-                    <Sparkles className="w-3.5 h-3.5" />
+                    <HeartHandshake className="w-3.5 h-3.5" />
                     <span>5 Besar Staf TU</span>
                   </button>
                 </div>
 
-                {/* Daftar Top 5 */}
-                <div className="space-y-2.5 max-w-xl mx-auto pt-1">
+                {/* Daftar Top 5 Podium */}
+                <div className="space-y-2.5 max-w-xl mx-auto">
                   {(leaderboardCategory === 'guru' ? top5Guru : top5TU).length === 0 ? (
-                    <div className="text-center py-8 text-slate-400 text-xs">
-                      Belum ada suara yang masuk di database Firebase.
+                    <div className="bg-slate-50 border border-slate-200 rounded-2xl text-center py-10 text-slate-400 text-xs">
+                      Belum ada perolehan suara yang masuk untuk {leaderboardCategory === 'guru' ? 'Guru' : 'Staf TU'}.
                     </div>
                   ) : (
                     (leaderboardCategory === 'guru' ? top5Guru : top5TU).map((item, idx) => {
-                      const medals = [
-                        { icon: '🥇', bg: 'border-amber-300 bg-amber-50/70 ring-2 ring-amber-200/50' },
-                        { icon: '🥈', bg: 'border-slate-300 bg-slate-50/80' },
-                        { icon: '🥉', bg: 'border-amber-700/30 bg-orange-50/50' },
-                        { icon: '#4', bg: 'border-slate-200 bg-white' },
-                        { icon: '#5', bg: 'border-slate-200 bg-white' },
-                      ];
-                      const medal = medals[idx] || { icon: `#${idx + 1}`, bg: 'border-slate-200 bg-white' };
+                      const isFirst = idx === 0;
+                      const isSecond = idx === 1;
+                      const isThird = idx === 2;
 
                       return (
                         <div
                           key={item.nama}
-                          className={`p-3.5 rounded-xl border ${medal.bg} flex items-center justify-between transition hover:shadow-sm`}
+                          className={`p-3.5 rounded-xl border flex items-center justify-between gap-3 transition ${
+                            isFirst
+                              ? 'bg-amber-50/70 border-amber-300 ring-2 ring-amber-200/50'
+                              : isSecond
+                              ? 'bg-slate-50 border-slate-300'
+                              : isThird
+                              ? 'bg-orange-50/50 border-orange-200'
+                              : 'bg-white border-slate-200'
+                          }`}
                         >
-                          <div className="flex items-center gap-3">
-                            <span className="text-xl shrink-0">{medal.icon}</span>
-                            <div>
-                              <h4 className="font-bold text-xs sm:text-sm text-slate-900 leading-tight">
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div
+                              className={`w-8 h-8 rounded-lg flex items-center justify-center font-mono text-xs font-black shrink-0 ${
+                                isFirst
+                                  ? 'bg-amber-400 text-slate-950 shadow-sm'
+                                  : isSecond
+                                  ? 'bg-slate-300 text-slate-800'
+                                  : isThird
+                                  ? 'bg-orange-200 text-orange-900'
+                                  : 'bg-slate-100 text-slate-600'
+                              }`}
+                            >
+                              #{idx + 1}
+                            </div>
+                            <div className="min-w-0">
+                              <h4 className="font-bold text-xs sm:text-sm text-slate-900 truncate">
                                 {item.nama}
                               </h4>
-                              <div className="flex items-center gap-2 text-[10px] sm:text-xs text-slate-500 mt-0.5">
-                                <span className="text-amber-500 font-semibold flex items-center gap-0.5">
+                              <div className="flex items-center gap-2 text-[11px] text-slate-500 mt-0.5">
+                                <span className="text-amber-500 font-semibold flex items-center gap-1">
                                   <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                                  <span>{item.rataRataSkor} / 5</span>
+                                  <span className="font-mono">{item.rataRataSkor} / 5.0</span>
                                 </span>
                                 <span>•</span>
                                 <span>{leaderboardCategory === 'guru' ? 'Dewan Guru' : 'Staf Tata Usaha'}</span>
@@ -1264,7 +1375,7 @@ export default function App() {
 
                           <div className="text-right shrink-0">
                             <span className={`inline-block px-3 py-1 rounded-full font-black text-xs sm:text-sm ${
-                              leaderboardCategory === 'guru' ? 'bg-indigo-100 text-indigo-700' : 'bg-pink-100 text-pink-700'
+                              leaderboardCategory === 'guru' ? 'bg-indigo-100 text-indigo-700' : 'bg-purple-100 text-purple-700'
                             }`}>
                               {item.totalSuara} Suara
                             </span>
@@ -1279,23 +1390,25 @@ export default function App() {
 
             {/* Konten Submenu 2: DATA MASUK (DATABASE FIRESTORE) */}
             {adminSubTab === 'dataMasuk' && (
-              <div className="space-y-3">
+              <div className="space-y-3.5">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <h3 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                  <div className="flex items-center gap-2">
                     <Database className="w-4 h-4 text-emerald-600" />
-                    <span>Daftar Dokumen Suara Masuk di Firebase Firestore</span>
-                  </h3>
+                    <h3 className="text-sm font-bold text-slate-800">
+                      Dokumen Suara Masuk di Cloud Firestore
+                    </h3>
+                  </div>
                   <button
                     onClick={handleAdminResetTest}
                     className="px-2.5 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-semibold transition cursor-pointer"
                   >
-                    Reset Hak Suara Tes
+                    Reset Hak Suara Tes Lokal
                   </button>
                 </div>
 
                 {/* Filter Rombel & Program Keahlian */}
                 <div className="flex flex-wrap items-center gap-1.5 py-1 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
-                  <span className="text-[11px] font-bold text-slate-600 mr-1">Filter Program Keahlian:</span>
+                  <span className="text-[11px] font-bold text-slate-600 mr-1">Program Keahlian:</span>
                   {(['SEMUA', 'TKJ', 'AKL', 'MPLB', 'PM'] as const).map((jur) => {
                     const count = jur === 'SEMUA' 
                       ? firestoreVotes.length 
@@ -1306,12 +1419,12 @@ export default function App() {
                         onClick={() => setJurusanFilter(jur)}
                         className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
                           jurusanFilter === jur
-                            ? 'bg-purple-600 text-white shadow-sm ring-2 ring-purple-200'
+                            ? 'bg-purple-600 text-white shadow-xs'
                             : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
                         }`}
                       >
                         <span>{jur === 'SEMUA' ? 'Semua' : jur}</span>
-                        <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${
+                        <span className={`px-1.5 py-0.2 rounded font-mono text-[10px] ${
                           jurusanFilter === jur ? 'bg-purple-800 text-white' : 'bg-slate-100 text-slate-600'
                         }`}>
                           {count}
@@ -1321,23 +1434,24 @@ export default function App() {
                   })}
                 </div>
 
-                <div className="overflow-x-auto custom-scrollbar border border-slate-200 rounded-xl">
+                {/* Tabel Data Masuk */}
+                <div className="overflow-x-auto rounded-xl border border-slate-200 custom-scrollbar">
                   <table className="w-full text-left text-xs text-slate-700">
-                    <thead className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold uppercase tracking-wider text-[11px]">
+                    <thead className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white uppercase font-bold text-[10px] tracking-wider">
                       <tr>
-                        <th className="p-2.5">Waktu Masuk</th>
-                        <th className="p-2.5">Nama Siswa</th>
-                        <th className="p-2.5">Kelas / Rombel</th>
-                        <th className="p-2.5">Guru Pilihan</th>
-                        <th className="p-2.5 text-center">Skor Guru</th>
-                        <th className="p-2.5">Staf TU Pilihan</th>
-                        <th className="p-2.5 text-center">Skor TU</th>
+                        <th className="py-2.5 px-3">Waktu</th>
+                        <th className="py-2.5 px-3">Nama Siswa</th>
+                        <th className="py-2.5 px-3">Kelas / Rombel</th>
+                        <th className="py-2.5 px-3">Guru Pilihan</th>
+                        <th className="py-2.5 px-3 text-center">Rating Guru</th>
+                        <th className="py-2.5 px-3">Staf TU Pilihan</th>
+                        <th className="py-2.5 px-3 text-center">Rating TU</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-200 bg-white">
+                    <tbody className="divide-y divide-slate-100 bg-white font-medium">
                       {filteredFirestoreVotes.length === 0 ? (
                         <tr>
-                          <td colSpan={7} className="p-6 text-center text-slate-400">
+                          <td colSpan={7} className="text-center py-8 text-slate-400">
                             {firestoreVotes.length === 0 
                               ? 'Belum ada dokumen suara di Firebase Firestore.' 
                               : `Tidak ada data suara untuk program keahlian "${jurusanFilter}".`}
@@ -1346,22 +1460,22 @@ export default function App() {
                       ) : (
                         filteredFirestoreVotes.map((item, idx) => (
                           <tr key={item.id || idx} className="hover:bg-slate-50 transition">
-                            <td className="p-2.5 font-mono text-slate-500 text-[10px] whitespace-nowrap">
-                              {item.createdAt ? new Date(item.createdAt).toLocaleString('id-ID') : '-'}
+                            <td className="py-2.5 px-3 font-mono text-slate-400 text-[11px] whitespace-nowrap">
+                              {item.createdAt ? new Date(item.createdAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : '-'}
                             </td>
-                            <td className="p-2.5 font-semibold text-slate-900 whitespace-nowrap">{item.namaSiswa}</td>
-                            <td className="p-2.5 whitespace-nowrap">
-                              <span className="px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 font-bold border border-purple-200 text-[10px]">
+                            <td className="py-2.5 px-3 font-bold text-slate-900 whitespace-nowrap">{item.namaSiswa}</td>
+                            <td className="py-2.5 px-3 whitespace-nowrap">
+                              <span className="px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 font-bold border border-purple-200 text-[10px] font-mono">
                                 {item.kelas}
                               </span>
                             </td>
-                            <td className="p-2.5 font-medium text-indigo-700 whitespace-nowrap">{item.namaGuru}</td>
-                            <td className="p-2.5 text-center font-bold text-amber-500 whitespace-nowrap">
-                              ⭐ {item.rataRataGuru}
+                            <td className="py-2.5 px-3 text-indigo-700 font-medium whitespace-nowrap">{item.namaGuru}</td>
+                            <td className="py-2.5 px-3 text-center font-mono font-bold text-amber-500 whitespace-nowrap">
+                              ★ {item.rataRataGuru}
                             </td>
-                            <td className="p-2.5 font-medium text-pink-700 whitespace-nowrap">{item.namaTU}</td>
-                            <td className="p-2.5 text-center font-bold text-amber-500 whitespace-nowrap">
-                              ⭐ {item.rataRataTU}
+                            <td className="py-2.5 px-3 text-pink-700 font-medium whitespace-nowrap">{item.namaTU}</td>
+                            <td className="py-2.5 px-3 text-center font-mono font-bold text-amber-500 whitespace-nowrap">
+                              ★ {item.rataRataTU}
                             </td>
                           </tr>
                         ))
@@ -1371,55 +1485,38 @@ export default function App() {
                 </div>
               </div>
             )}
-
-            {/* Footer Panel Admin: Kembali ke Dashboard */}
-            <div className="mt-6 pt-4 border-t border-slate-200 flex items-center justify-between text-xs">
-              <span className="text-slate-500">
-                Terhubung ke Project ID: <code className="font-mono text-purple-700 font-bold">{firebaseConfig.projectId}</code>
-              </span>
-              <button
-                type="button"
-                onClick={() => setCurrentView('dashboard')}
-                className="font-bold text-purple-600 hover:text-purple-700 flex items-center gap-1 cursor-pointer"
-              >
-                <ArrowLeft className="w-3.5 h-3.5" />
-                <span>Kembali ke Dashboard Polling</span>
-              </button>
-            </div>
           </div>
         )}
 
-      </div>
+      </main>
 
       {/* MODAL PIN LOGIN ADMIN */}
       {showAdminPinModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-sm w-full p-6 text-slate-800 animate-zoom-in relative">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-sm w-full p-6 text-slate-800 animate-zoom-in relative space-y-4">
             <button
               onClick={() => {
                 setShowAdminPinModal(false);
                 setAdminPinError(null);
                 setAdminPinInput('');
               }}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 cursor-pointer"
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <div className="text-center mb-4">
-              <div className="w-12 h-12 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center mx-auto mb-2 text-xl shadow-inner">
-                <KeyRound className="w-6 h-6" />
+            <div className="text-center">
+              <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center mx-auto mb-2 font-bold shadow-inner">
+                <Lock className="w-6 h-6" />
               </div>
               <h3 className="font-extrabold text-base text-slate-900">Masuk Menu Admin</h3>
-              <p className="text-xs text-slate-500 mt-1">
-                Akses khusus guru/panitia untuk melihat 5 Besar Teratas dan Data Masuk.
-              </p>
+              <p className="text-xs text-slate-500 mt-0.5">Khusus Panitia &amp; Dewan Guru</p>
             </div>
 
-            <form onSubmit={handleAdminLogin} className="space-y-3">
+            <form onSubmit={handleAdminLogin} className="space-y-3.5">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Masukkan PIN / Sandi Admin:
+                  Masukkan PIN Admin:
                 </label>
                 <input
                   type="password"
@@ -1429,27 +1526,43 @@ export default function App() {
                     setAdminPinError(null);
                   }}
                   placeholder="PIN Default: admin2026"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none text-sm text-center tracking-widest font-mono"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none text-sm text-center tracking-widest font-mono text-slate-900 placeholder-slate-400"
                   autoFocus
                 />
                 {adminPinError && (
-                  <p className="text-[11px] text-pink-600 font-semibold mt-1 text-center">
+                  <p className="text-xs text-pink-600 font-semibold mt-1 text-center">
                     {adminPinError}
                   </p>
                 )}
               </div>
 
-              <button
-                type="submit"
-                className="w-full py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold text-xs shadow hover:opacity-95 transition cursor-pointer"
-              >
-                Buka Menu Admin
-              </button>
+              <div className="flex items-center gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => setShowAdminPinModal(false)}
+                  className="flex-1 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition cursor-pointer"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:opacity-95 text-white font-bold text-xs shadow-md shadow-purple-500/20 transition cursor-pointer"
+                >
+                  Buka Panel
+                </button>
+              </div>
             </form>
           </div>
         </div>
       )}
 
+      {/* Footer */}
+      <footer className="py-4 px-4 text-center text-xs text-white/80">
+        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+          <p>© 2026 SMKS PGRI 1 Kota Sukabumi • Hari Guru Nasional</p>
+          <p className="text-[11px] text-purple-200">Sistem Polling Digital Berbasis Cloud Firestore</p>
+        </div>
+      </footer>
     </div>
   );
 }
