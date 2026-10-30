@@ -588,7 +588,7 @@ export default function App() {
       setAdminPinError(null);
       setCurrentView('admin');
     } else {
-      setAdminPinError('PIN Admin salah! (Default: admin2026)');
+      setAdminPinError('PIN Admin salah! Silakan periksa kembali.');
     }
   };
 
@@ -2739,7 +2739,7 @@ export default function App() {
                     setAdminPinInput(e.target.value);
                     setAdminPinError(null);
                   }}
-                  placeholder="PIN Default: admin2026"
+                  placeholder="Masukkan PIN Admin..."
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none text-sm text-center tracking-widest font-mono text-black font-bold placeholder-slate-500"
                   autoFocus
                 />
