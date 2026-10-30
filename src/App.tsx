@@ -148,19 +148,19 @@ interface TopRankItem {
 }
 
 const CRITERIA_GURU: { key: GuruKey; label: string; desc: string }[] = [
-  { key: 'keramahan', label: '1. Keramahan', desc: 'Ramah, menyambut siswa dengan hangat, dan menciptakan suasana belajar yang nyaman.' },
-  { key: 'profesionalisme', label: '2. Profesionalisme', desc: 'Menguasai materi pelajaran, disiplin waktu, dan adil dalam mendidik semua siswa.' },
-  { key: 'empati', label: '3. Empati', desc: 'Memahami kendala siswa, mendengarkan saran, dan sabar membimbing saat kesulitan.' },
-  { key: 'keteladanan', label: '4. Keteladanan', desc: 'Menjadi teladan dalam akhlak, integritas, tutur kata, dan perilaku sehari-hari.' },
-  { key: 'inspirasi', label: '5. Inspirasi', desc: 'Mampu memotivasi siswa untuk berprestasi dan terus percaya pada masa depan.' },
+  { key: 'keramahan', label: '1. Gampang Dideketin (Keramahan)', desc: 'Asik diajak ngobrol, ramah, dan gak bikin takut buat nanya.' },
+  { key: 'profesionalisme', label: '2. Cara Ngajarnya Juara (Profesional)', desc: 'Jelasin materi gampang dimengerti, seru, nggak bikin ngantuk.' },
+  { key: 'empati', label: '3. Peduli Banget (Empati)', desc: 'Ngertiin kondisi siswa, dengerin keluhan, dan sabar ngebantu.' },
+  { key: 'keteladanan', label: '4. Jadi Panutan (Keteladanan)', desc: 'Disiplin, penampilan rapi, sopan, cocok jadi contoh.' },
+  { key: 'inspirasi', label: '5. Bikin Semangat (Inspirasi)', desc: 'Suka ngasih motivasi dan bikin makin pede ngejar cita-cita.' },
 ];
 
 const CRITERIA_TU: { key: TUKey; label: string; desc: string }[] = [
-  { key: 'keramahan', label: '1. Keramahan', desc: 'Ramah, santun, dan tersenyum saat melayani siswa dan tamu sekolah.' },
-  { key: 'kecepatan', label: '2. Kecepatan Kerja', desc: 'Cekatan, sigap, dan tidak berbelit-belit dalam mengurus keperluan administrasi.' },
-  { key: 'bantuan', label: '3. Bantuan', desc: 'Suka menolong, memberi panduan jelas, dan solutif bila siswa menghadapi masalah berkas.' },
-  { key: 'kedisiplinan', label: '4. Kedisiplinan', desc: 'Tepat waktu di ruang tata usaha, menjaga ketertiban, dan teliti dalam bekerja.' },
-  { key: 'auraPositif', label: '5. Aura Positif', desc: 'Membawa suasana ceria, tidak mudah emosi, dan membuat ruang TU terasa bersahabat.' },
+  { key: 'keramahan', label: '1. Ramah & Murah Senyum', desc: 'Selalu ramah, senyum, dan enak diajak ngobrol.' },
+  { key: 'kecepatan', label: '2. Kerjanya Cepat & Jelas', desc: 'Ngurus surat atau nanya info pelayanannya cepet dan gak ribet.' },
+  { key: 'bantuan', label: '3. Suka Ngebantu', desc: 'Sabar ngelayanin dan mau bantu ngasih solusi administrasi.' },
+  { key: 'kedisiplinan', label: '4. Contoh Kedisiplinan', desc: 'Selalu ada di jam kerja, rapi, dan disiplin.' },
+  { key: 'auraPositif', label: '5. Bawa Aura Positif', desc: 'Suka ngasih sapaan yang bikin hari di sekolah lebih asik.' },
 ];
 
 const RATING_DESCRIPTIONS = [
@@ -1479,27 +1479,6 @@ export default function App() {
                         )}
                       </div>
                     )}
-                    
-                    {/* Quick chips from master teachers */}
-                    {!isManualGuru && masterTeachers.length > 0 && (
-                      <div className="flex flex-wrap items-center gap-1.5 mt-2">
-                        <span className="text-[10px] text-black font-bold">Pilihan Cepat:</span>
-                        {masterTeachers.slice(0, 4).map((g) => (
-                          <button
-                            key={g}
-                            type="button"
-                            onClick={() => setNamaGuru(g)}
-                            className={`px-2.5 py-0.5 rounded-lg text-[10px] transition cursor-pointer ${
-                              namaGuru === g
-                                ? 'bg-indigo-600 text-white font-bold'
-                                : 'bg-slate-100 hover:bg-slate-200 text-black font-bold border border-slate-300'
-                            }`}
-                          >
-                            {g.split('(')[0].trim()}
-                          </button>
-                        ))}
-                      </div>
-                    )}
                   </div>
 
                   {/* 5 Criteria Stars */}
@@ -1669,27 +1648,6 @@ export default function App() {
                             </button>
                           </div>
                         )}
-                      </div>
-                    )}
-
-                    {/* Quick chips from master staff */}
-                    {!isManualTU && masterStaff.length > 0 && (
-                      <div className="flex flex-wrap items-center gap-1.5 mt-2">
-                        <span className="text-[10px] text-black font-bold">Pilihan Cepat:</span>
-                        {masterStaff.slice(0, 4).map((t) => (
-                          <button
-                            key={t}
-                            type="button"
-                            onClick={() => setNamaTU(t)}
-                            className={`px-2.5 py-0.5 rounded-lg text-[10px] transition cursor-pointer ${
-                              namaTU === t
-                                ? 'bg-purple-600 text-white font-bold'
-                                : 'bg-slate-100 hover:bg-slate-200 text-black font-bold border border-slate-300'
-                            }`}
-                          >
-                            {t.split('(')[0].trim()}
-                          </button>
-                        ))}
                       </div>
                     )}
                   </div>
