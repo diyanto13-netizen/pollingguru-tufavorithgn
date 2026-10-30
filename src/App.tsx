@@ -1325,14 +1325,8 @@ export default function App() {
                               disabled={!kelas}
                               value={namaSiswa}
                               onChange={(e) => {
-                                const val = e.target.value;
-                                if (val === '__MANUAL__') {
-                                  setIsManualStudent(true);
-                                  setNamaSiswa('');
-                                } else {
-                                  setNamaSiswa(val);
-                                  setDuplicateWarning(null);
-                                }
+                                setNamaSiswa(e.target.value);
+                                setDuplicateWarning(null);
                               }}
                               className={`w-full pl-10 pr-8 py-2.5 rounded-xl border outline-none text-sm transition appearance-none cursor-pointer ${
                                 !kelas
@@ -1361,11 +1355,6 @@ export default function App() {
                                   </option>
                                 );
                               })}
-                              {kelas && (
-                                <option value="__MANUAL__" className="text-purple-700 font-bold">
-                                  + {studentsInSelectedClass.length === 0 ? 'Ketik Nama Siswa Secara Manual...' : 'Nama Saya Tidak Ada di Daftar (Ketik Manual)...'}
-                                </option>
-                              )}
                             </select>
                             <span className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-black">
                               <ChevronRight className="w-4 h-4 rotate-90" />
